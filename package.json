@@ -12,5 +12,9 @@
   },
   "keywords": [],
   "author": "DY",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lit-html": "^3.2.0",
+    "page": "^1.11.6"
+  }
 }
