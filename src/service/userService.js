@@ -8,7 +8,7 @@ const endpoints = {
 }
 
 async function register(username, email, password) {
-    const result = await api.post(endpoints.register, {username, email, password});
+    const result = await api.post(endpoints.register, { username, email, password });
 
     const userData = {
         username,
@@ -20,7 +20,7 @@ async function register(username, email, password) {
 }
 
 async function login(username, password) {
-    const result = await api.post(endpoints.login, {username, password});
+    const result = await api.post(endpoints.login, { username, password });
 
     const userData = {
         username: result.username,
@@ -34,4 +34,10 @@ async function login(username, password) {
 async function logout(params) {
     await api.post(endpoints.logout);
     user.clearUserData();
+}
+
+export const userService = {
+    register,
+    login,
+    logout
 }
