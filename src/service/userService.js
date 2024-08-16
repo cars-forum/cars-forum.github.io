@@ -31,7 +31,7 @@ async function login(username, password) {
     user.setUserData(userData);
 }
 
-async function logout(params) {
+async function logout() {
     await api.post(endpoints.logout);
     user.clearUserData();
 }

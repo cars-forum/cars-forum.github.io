@@ -3,7 +3,12 @@ import { html, render } from '@lit/lit-html.js';
 
 import { addRender } from './middleware/render.js';
 import { addRedirect } from './middleware/redirect.js';
-import { addNavControl } from './middleware/navigation.js';
+import { addNavControl, updateNav } from './middleware/navigation.js';
+
+import { showLoginView } from './views/loginView.js';
+import { addSessionControl } from './middleware/session.js';
+import { showHomeView } from './views/homeView.js';
+import { showRegisterView } from './views/registerView.js';
 
 const root = document.querySelector('main');
 
@@ -14,17 +19,11 @@ if (!root) {
 page(addRender(root));
 page(addRedirect());
 page(addNavControl());
-page('/', () => console.log('Works!'));
-page('/register');
-page('/login');
+page(addSessionControl());
+page('/', showHomeView);
+page('/register', showRegisterView);
+page('/login', showLoginView);
 
 page.start();
 
-function greet(text) {
-    const main = document.querySelector('main');
-    const temp = () => html`<h1>${text}</h1>`
-
-    render(temp(), main);
-}
-
-greet('Test');
+updateNav();
