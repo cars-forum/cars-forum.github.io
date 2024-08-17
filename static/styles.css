@@ -53,6 +53,10 @@ nav ul li a:hover {
     height: 350px;
 }
 
+.invalid {
+    border-color: red;
+}
+
 /* Footer */
 footer {
     background-color: #333;

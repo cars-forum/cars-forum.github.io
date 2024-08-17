@@ -7,13 +7,13 @@ const template = (registerHandler) => html`
     <h1>Register</h1>
     <form @submit=${registerHandler}>
         <label for="username">Username</label>
-        <input type="text" id="username" name="username">
+        <input @change=${fillCheck} type="text" id="username" name="username">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email">
+        <input @change=${fillCheck} type="text" id="email" name="email">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password">
+        <input @change=${fillCheck} type="password" id="password" name="password">
         <label for="repassword">Repeat Password</label>
-        <input type="password" id="repassword" name="repassword">
+        <input @change=${passwordMatchingCheck} type="password" id="repassword" name="repassword">
         <button type="submit">Register</button>
     </form>
 </section>
@@ -42,12 +42,12 @@ export function showRegisterView(ctx) {
     async function onRegister({ username, email, password, repassword }, form) {
         lockForm();
 
-        if (!username || !email || !password) {
+        if (username.length < 4 || email.length < 6 || password.length < 5) {
             unlockForm();
-            return alert('All fields are required.');
+            return alert('Please fulfill the requirements!');
         }
 
-        if(password !== repassword){
+        if (password !== repassword) {
             unlockForm();
             return alert("Passwords don't match.");
         }
@@ -71,5 +71,57 @@ export function showRegisterView(ctx) {
 
     function lockForm() {
         ctx.render(disabledFormTemplate());
+    }
+}
+
+function fillCheck(e) {
+    const currentTarget = e.currentTarget;
+    const name = currentTarget.getAttribute('name');
+    const fieldsLength = {
+        username: 4,
+        email: 6,
+        password: 5
+    };
+
+    const minLength = fieldsLength[name];
+
+    const currentLength = currentTarget.value.length;
+
+    const labelRef = document.querySelector(`label[for="${name}"]`);
+
+    currentLength < minLength ? invalidStylization() : validStylization();
+
+
+    function validStylization() {
+        currentTarget.classList.remove('invalid');
+        labelRef.textContent = name[0].toUpperCase() + name.slice(1);
+        labelRef.style.color = 'black';
+    }
+
+    function invalidStylization() {
+        currentTarget.classList.add('invalid');
+        labelRef.textContent += ` must be at least ${fieldsLength[name]} characters long.`;
+        labelRef.style.color = 'red';
+    }
+}
+
+function passwordMatchingCheck(e) {
+    const currentTarget = e.currentTarget;
+    const value = currentTarget.value;
+    const name = currentTarget.getAttribute('name');
+    const labelRef = document.querySelector(`label[for="${name}"]`);
+
+    value !== document.getElementById('password').value ? invalidStylization() : validStylization();
+
+    function validStylization() {
+        currentTarget.classList.remove('invalid');
+        labelRef.textContent = name[0].toUpperCase() + name.slice(1);
+        labelRef.style.color = 'black';
+    }
+
+    function invalidStylization() {
+        currentTarget.classList.add('invalid');
+        labelRef.textContent = "Passwords don't match.";
+        labelRef.style.color = 'red';
     }
 }

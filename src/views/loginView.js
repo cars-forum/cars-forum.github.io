@@ -27,7 +27,7 @@ const disabledFormTemplate = () => html`
     </form>
 </section>
 `
-// TODO: Login handler doesn't work after unsuccessful submit.
+
 export function showLoginView(ctx) {
     unlockForm();
 
