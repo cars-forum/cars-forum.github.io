@@ -1,5 +1,4 @@
 import page from '@page/page.mjs';
-import { html, render } from '@lit/lit-html.js';
 
 import { addRender } from './middleware/render.js';
 import { addRedirect } from './middleware/redirect.js';

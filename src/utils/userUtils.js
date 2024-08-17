@@ -1,4 +1,4 @@
-const browserStorage = sessionStorage;
+const browserStorage = localStorage;
 
 function setUserData(data) {
     browserStorage.setItem('userData', JSON.stringify(data));
