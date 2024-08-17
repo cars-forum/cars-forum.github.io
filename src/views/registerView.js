@@ -37,25 +37,39 @@ const disabledFormTemplate = () => html`
 `
 
 export function showRegisterView(ctx) {
-    ctx.render(template(submitHandler(onRegister)));
+    unlockForm();
 
-    async function onRegister({ username, email, password }, form) {
-        ctx.render(disabledFormTemplate());
+    async function onRegister({ username, email, password, repassword }, form) {
+        lockForm();
 
         if (!username || !email || !password) {
-            ctx.render(template(submitHandler(onRegister)));
+            unlockForm();
             return alert('All fields are required.');
+        }
+
+        if(password !== repassword){
+            unlockForm();
+            return alert("Passwords don't match.");
         }
 
         try {
             await userService.register(username, email, password);
 
         } catch (error) {
+            unlockForm();
             return;
         }
 
         form.reset();
         ctx.updateNav();
         ctx.redirect('/');
+    }
+
+    function unlockForm() {
+        ctx.render(template(submitHandler(onRegister)));
+    }
+
+    function lockForm() {
+        ctx.render(disabledFormTemplate());
     }
 }

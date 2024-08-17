@@ -7,10 +7,10 @@ const template = (loginHandler) => html`
     <h1>Login</h1>
     <form @submit=${loginHandler}>
         <label for="username">Username</label>
-        <input type="text" id="username" name="username">
+        <input ?disabled=${false} type="text" id="username" name="username">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-        <button type="submit">Login</button>
+        <input ?disabled=${false} type="password" id="password" name="password">
+        <button ?disabled=${false} type="submit">Login</button>
     </form>
 </section>
 `
@@ -19,23 +19,23 @@ const disabledFormTemplate = () => html`
 <section id="login">
     <h1>Login</h1>
     <form>
-        <label ?disabled=${true} for="username">Username</label>
-        <input type="text" id="username" name="username">
-        <label ?disabled=${true} for="password">Password</label>
-        <input type="password" id="password" name="password">
+        <label for="username">Username</label>
+        <input ?disabled=${true} type="text" id="username" name="username">
+        <label for="password">Password</label>
+        <input ?disabled=${true} type="password" id="password" name="password">
         <button ?disabled=${true} type="submit">Login</button>
     </form>
 </section>
 `
 // TODO: Login handler doesn't work after unsuccessful submit.
 export function showLoginView(ctx) {
-    ctx.render(template(submitHandler(onLogin)));
+    unlockForm();
 
     async function onLogin({username, password}, form) {
-        ctx.render(disabledFormTemplate());
+        lockForm();
 
         if(!username || !password){
-            ctx.render(template(submitHandler(onLogin)));
+            unlockForm();
             return alert('All fields are required.');
         }
 
@@ -43,11 +43,20 @@ export function showLoginView(ctx) {
             await userService.login(username, password);
 
         } catch (error) {
+            unlockForm();
             return;
         }
 
         form.reset();
         ctx.updateNav();
         ctx.redirect('/');
+    }
+
+    function unlockForm() {
+        ctx.render(template(submitHandler(onLogin)));
+    }
+
+    function lockForm() {
+        ctx.render(disabledFormTemplate());
     }
 }
