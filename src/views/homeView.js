@@ -1,29 +1,41 @@
 import { html } from "@lit/lit-html.js";
+import { dataService } from "../service/dataService.js";
 
-const template = (userData) => html`
+const template = (categories, userData, isAdmin) => html`
 <section id="home">
     <h1>Forum Categories</h1>
-    <div class="category">
-        <h2>Category 1</h2>
-        <ul>
-            <li><a href="topic.html">Topic 1</a></li>
-            <li><a href="topic.html">Topic 2</a></li>
-        </ul>
-    </div>
-    <div class="category">
-        <h2>Category 2</h2>
-        <ul>
-            <li><a href="topic.html">Topic 3</a></li>
-            <li><a href="topic.html">Topic 4</a></li>
-        </ul>
-    </div>
+    ${isAdmin ? html`
+    <a class="button" href="/create-category">Create New Category</a>
+    `: null}
+    ${categories.map(categoryTemplate)}
     ${userData ? html`
-    <button class="create-button">Create New Topic</button>
+    <a class="button" href="/create-topic">Create New Topic</a>
     `: null}
 </section>
 `
 
-export function showHomeView(ctx) {
-    const userData = ctx.getUserData();
-    ctx.render(template(userData));
+const categoryTemplate = (item) => html`
+    <div class="category">
+        <h2>${item.title}</h2>
+        <ul>
+            ${item.topics.map(topicTemplate)}
+        </ul>
+    </div>
+`
+
+const topicTemplate = (item) => html`
+            <li><a href="topic/${item.objectId}">${item.title}</a></li>
+`
+
+export async function showHomeView(ctx) {
+    const categories = await dataService.getAllCategories();
+    
+    const categoriesWithTopics = await Promise.all(categories.map(async (category) => {
+        const topics = await dataService.getTopics(category.objectId);
+        return { ...category, topics };
+    }));
+
+    const userData = ctx.userUtils.getUserData();
+    const isAdmin = ctx.userUtils.isAdmin();
+    ctx.render(template(categoriesWithTopics, userData, isAdmin));
 }

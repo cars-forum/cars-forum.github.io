@@ -25,7 +25,8 @@ async function login(username, password) {
     const userData = {
         username: result.username,
         objectId: result.objectId,
-        sessionToken: result.sessionToken
+        sessionToken: result.sessionToken,
+        roleId: result?.role?.objectId
     };
 
     user.setUserData(userData);

@@ -1,3 +1,5 @@
+import { ROLES } from "../service/roles.js";
+
 const browserStorage = localStorage;
 
 function setUserData(data) {
@@ -16,9 +18,14 @@ function getSessionToken() {
     return getUserData().sessionToken;
 }
 
-function isOwner(ownerItemId) {
-    const userId = getUserData()?._id;
-    return userId === ownerItemId;
+// function isOwner(ownerItemId) {
+//     const userId = getUserData()?._id;
+//     return userId === ownerItemId;
+// }
+
+function isAdmin() {
+    const roleId = getUserData()?.roleId;
+    return roleId === ROLES.admin;
 }
 
 export const user = {
@@ -26,5 +33,6 @@ export const user = {
     getUserData,
     clearUserData,
     getSessionToken,
-    isOwner,
+    // isOwner,
+    isAdmin
 };
