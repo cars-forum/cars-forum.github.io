@@ -8,6 +8,7 @@ import { showLoginView } from './views/loginView.js';
 import { addSessionControl } from './middleware/session.js';
 import { showHomeView } from './views/homeView.js';
 import { showRegisterView } from './views/registerView.js';
+import { showTopicView } from './views/topicView.js';
 
 const root = document.querySelector('main');
 
@@ -22,6 +23,7 @@ page(addSessionControl());
 page('/', showHomeView);
 page('/register', showRegisterView);
 page('/login', showLoginView);
+page('/topic/:id', showTopicView);
 
 page.start();
 
