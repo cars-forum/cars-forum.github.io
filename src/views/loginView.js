@@ -1,5 +1,5 @@
 import { html } from "@lit/lit-html.js";
-import { submitHandler } from "../utils/submitUtil.js";
+import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { userService } from "../service/userService.js";
 
 const template = (loginHandler) => html`
@@ -7,35 +7,22 @@ const template = (loginHandler) => html`
     <h1>Login</h1>
     <form @submit=${loginHandler}>
         <label for="username">Username</label>
-        <input ?disabled=${false} type="text" id="username" name="username">
+        <input type="text" id="username" name="username">
         <label for="password">Password</label>
-        <input ?disabled=${false} type="password" id="password" name="password">
-        <button ?disabled=${false} type="submit">Login</button>
+        <input type="password" id="password" name="password">
+        <button id="submit" type="submit">Login</button>
     </form>
 </section>
 `
-
-const disabledFormTemplate = () => html`
-<section id="login">
-    <h1>Login</h1>
-    <form>
-        <label for="username">Username</label>
-        <input ?disabled=${true} type="text" id="username" name="username">
-        <label for="password">Password</label>
-        <input ?disabled=${true} type="password" id="password" name="password">
-        <button ?disabled=${true} type="submit">Login</button>
-    </form>
-</section>
-`
-
 export function showLoginView(ctx) {
-    unlockForm();
+    ctx.render(template(submitHandler(onLogin)));
 
-    async function onLogin({username, password}, form) {
-        lockForm();
+    async function onLogin({ username, password }, form) {
+        const locker = new FormLocker(['username', 'password', 'submit']);
+        locker.lockForm();
 
-        if(!username || !password){
-            unlockForm();
+        if (!username || !password) {
+            locker.unlockForm();
             return alert('All fields are required.');
         }
 
@@ -43,20 +30,12 @@ export function showLoginView(ctx) {
             await userService.login(username, password);
 
         } catch (error) {
-            unlockForm();
+            locker.unlockForm();
             return;
         }
 
         form.reset();
         ctx.updateNav();
         ctx.redirect('/');
-    }
-
-    function unlockForm() {
-        ctx.render(template(submitHandler(onLogin)));
-    }
-
-    function lockForm() {
-        ctx.render(disabledFormTemplate());
     }
 }
