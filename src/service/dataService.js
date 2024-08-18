@@ -4,7 +4,9 @@ const endpoints = {
     topicsOfCategory: (categoryId) => `/classes/Posts/?include=author&where={"category":{"__type":"Pointer","className":"Categories","objectId":"${categoryId}"}}`,
     categories: '/classes/Categories/?order=createdAt',
     topic: (topicId) => `/classes/Posts/${topicId}?include=author`,
-    creating: '/classes/Posts'
+    creatingPost: '/classes/Posts',
+    creatingReply: '/classes/Replies',
+    allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author`
 }
 
 async function getAllCategories() {
@@ -22,7 +24,7 @@ async function getTopicDetails(topicId) {
 }
 
 async function createNewTopic(title, content, authorId, categoryId) {
-    return await api.post(endpoints.creating, {
+    return await api.post(endpoints.creatingPost, {
         title,
         content,
         author: { "__type": "Pointer", "className": "_User", "objectId": authorId },
@@ -30,9 +32,24 @@ async function createNewTopic(title, content, authorId, categoryId) {
     });
 }
 
+async function addNewReply(content, authorId, postId) {
+    return await api.post(endpoints.creatingReply, {
+        content,
+        "author": { "__type": "Pointer", "className": "_User", "objectId": authorId },
+        "post": { "__type": "Pointer", "className": "Posts", "objectId": postId }
+      });
+}
+
+async function getAllReplies(postId) {
+    const result = await api.get(endpoints.allRepliesOfPost(postId));
+    return result.results;
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
     getTopicDetails,
-    createNewTopic
+    createNewTopic,
+    addNewReply,
+    getAllReplies
 };

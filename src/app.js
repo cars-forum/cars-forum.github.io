@@ -10,6 +10,7 @@ import { showHomeView } from './views/homeView.js';
 import { showRegisterView } from './views/registerView.js';
 import { showTopicView } from './views/topicView.js';
 import { showCreateTopicView } from './views/createTopicView.js';
+import { showReplyView } from './views/replyView.js';
 
 const root = document.querySelector('main');
 
@@ -26,6 +27,7 @@ page('/register', showRegisterView);
 page('/login', showLoginView);
 page('/topic/:id', showTopicView);
 page('/create-topic', showCreateTopicView);
+page('/reply/:id', showReplyView);
 
 page.start();
 

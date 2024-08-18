@@ -232,6 +232,51 @@ form button:hover {
     background-color: #762f00;
 }
 
+/* Reply Topic Styles */
+#reply-topic {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+#reply-topic h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#reply-topic form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#reply-topic form input[type="text"],
+#reply-topic form textarea,
+#reply-topic form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#reply-topic form button {
+    padding: 10px 20px;
+    background-color: #FF6400;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#reply-topic form button:hover {
+    background-color: #762f00;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #topic .comment {
