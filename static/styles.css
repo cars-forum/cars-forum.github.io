@@ -187,6 +187,36 @@ form button:hover {
     flex: 1;
 }
 
+#topic .button {
+    padding: 10px 100px;
+}
+
+#topic .lockedButton{
+    padding: 10px 100px;
+    background-color: #d62400;
+}
+
+#topic .lockedButton:hover{
+    cursor: not-allowed;
+    background-color: black;
+    transition: 400ms;
+}
+
+.lockedButton img{
+    width: 30px;
+    height: 28px;
+    vertical-align: middle;
+}
+
+#topic .admin-panel{
+    border: 3px dashed lightgray;
+}
+
+#topic .admin-panel .button{
+    vertical-align: middle;
+    margin: 10px;
+}
+
 /* Create Topic Styles */
 #create-topic {
     max-width: 800px;
