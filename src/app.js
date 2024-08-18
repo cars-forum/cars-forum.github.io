@@ -9,6 +9,7 @@ import { addSessionControl } from './middleware/session.js';
 import { showHomeView } from './views/homeView.js';
 import { showRegisterView } from './views/registerView.js';
 import { showTopicView } from './views/topicView.js';
+import { showCreateTopicView } from './views/createTopicView.js';
 
 const root = document.querySelector('main');
 
@@ -24,6 +25,7 @@ page('/', showHomeView);
 page('/register', showRegisterView);
 page('/login', showLoginView);
 page('/topic/:id', showTopicView);
+page('/create-topic', showCreateTopicView);
 
 page.start();
 

@@ -40,7 +40,7 @@ async function requester(method, url, data) {
         }
 
     } catch (error) {
-        alert(error.message);
+        alert(error);
         throw error;
     }
 }

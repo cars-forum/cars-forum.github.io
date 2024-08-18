@@ -207,7 +207,8 @@ form button:hover {
 }
 
 #create-topic form input[type="text"],
-#create-topic form textarea {
+#create-topic form textarea,
+#create-topic form select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;

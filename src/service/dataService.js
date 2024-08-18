@@ -3,7 +3,8 @@ import { api } from "./api.js";
 const endpoints = {
     topicsOfCategory: (categoryId) => `/classes/Posts/?include=author&where={"category":{"__type":"Pointer","className":"Categories","objectId":"${categoryId}"}}`,
     categories: '/classes/Categories/?order=createdAt',
-    topic: (topicId) => `/classes/Posts/${topicId}?include=author`
+    topic: (topicId) => `/classes/Posts/${topicId}?include=author`,
+    creating: '/classes/Posts'
 }
 
 async function getAllCategories() {
@@ -20,8 +21,18 @@ async function getTopicDetails(topicId) {
     return await api.get(endpoints.topic(topicId));
 }
 
+async function createNewTopic(title, content, authorId, categoryId) {
+    return await api.post(endpoints.creating, {
+        title,
+        content,
+        author: { "__type": "Pointer", "className": "_User", "objectId": authorId },
+        category: { "__type": "Pointer", "className": "Categories", "objectId": categoryId }
+    });
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
-    getTopicDetails
+    getTopicDetails,
+    createNewTopic
 };
