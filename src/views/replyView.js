@@ -26,7 +26,6 @@ export async function showReplyView(ctx) {
     ctx.render(template(data, submitHandler(onReply)));
 
     async function onReply({ objectId, content }, form) {
-        debugger;
         const locker = new FormLocker(['content', 'submit']);
         locker.lockForm();
 

@@ -67,8 +67,6 @@ export async function showTopicView(ctx) {
             return;
         }
 
-        debugger;
-
         const currentTarget = e.currentTarget;
         const postId = currentTarget.getAttribute('data-id');
         await dataService.changeTopicLockingState(postId, true);
@@ -84,7 +82,7 @@ export async function showTopicView(ctx) {
 
         const currentTarget = e.currentTarget;
         const postId = currentTarget.getAttribute('data-id');
-        await dataService.changeTopicLockingState(postId, true);
+        await dataService.changeTopicLockingState(postId, false);
         ctx.redirect('/topic/' + id);
     }
 }
