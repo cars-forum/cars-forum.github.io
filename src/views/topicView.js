@@ -1,7 +1,24 @@
 import { html } from "@lit/lit-html.js";
 import { dataService } from "../service/dataService.js";
 
-const template = (data, replies, userData, isAdmin, handlers) => html`
+const template = (data, replies, userData, isAdmin, handlers) => {
+    const commentTemplate = (item) => html`
+    <div class="comment">
+        <div class="user-info">
+            <img src="/static/img/avatar.png" alt="User Avatar">
+            <p>${item.author.username}</p>
+            <p>Additional Info</p>
+        </div>
+        <div class="user-comment">
+            <p>Replied at: ${new Date(item.createdAt).toLocaleString('uk-Uk')}</p>
+            <p>${item.content}</p>
+            ${isAdmin ? html`
+                <a href="javascript:void(0)" class="button">Edit</a>
+            `: null}
+        </div>
+    </div>
+`
+    return html`
     <section id="topic">
     ${isAdmin ? html`
     <div class="admin-panel">
@@ -10,7 +27,6 @@ const template = (data, replies, userData, isAdmin, handlers) => html`
         `: html`
             <a @click=${handlers.lockTopic} data-id="${data.objectId}" href="javascript:void(0)" class="button">Lock</a>
         `}
-        <a href="javascript:void(0)" class="button">Edit</a>
         <a href="javascript:void(0)" class="button">Archive</a>
     </div>
     `: null}
@@ -24,6 +40,9 @@ const template = (data, replies, userData, isAdmin, handlers) => html`
         <div class="user-comment">
             <p>Published at: ${new Date(data.createdAt).toLocaleString('uk-Uk')}</p>
             <p>${data.content}</p>
+            ${isAdmin ? html`
+                <a href="javascript:void(0)" class="button">Edit</a>
+            `: null}
         </div>
     </div>
     ${replies.map(commentTemplate)}
@@ -34,18 +53,7 @@ const template = (data, replies, userData, isAdmin, handlers) => html`
     `: null}
 </section>
 `
-const commentTemplate = (item) => html`
-    <div class="comment">
-        <div class="user-info">
-            <img src="/static/img/avatar.png" alt="User Avatar">
-            <p>${item.author.username}</p>
-            <p>Additional Info</p>
-        </div>
-        <div class="user-comment">
-            <p>${item.content}</p>
-        </div>
-    </div>
-`
+}
 
 export async function showTopicView(ctx) {
     const id = ctx.params.id;
