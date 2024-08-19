@@ -13,7 +13,7 @@ const template = (data, replies, userData, isAdmin, handlers) => {
             <p>Replied at: ${new Date(item.createdAt).toLocaleString('uk-Uk')}</p>
             <p>${item.content}</p>
             ${isAdmin ? html`
-                <a href="javascript:void(0)" class="button">Edit</a>
+                <a href="/edit-reply/${item.objectId}" class="button">Edit</a>
             `: null}
         </div>
     </div>
@@ -41,7 +41,7 @@ const template = (data, replies, userData, isAdmin, handlers) => {
             <p>Published at: ${new Date(data.createdAt).toLocaleString('uk-Uk')}</p>
             <p>${data.content}</p>
             ${isAdmin ? html`
-                <a href="javascript:void(0)" class="button">Edit</a>
+                <a href="/edit-topic/${data.objectId}" class="button">Edit</a>
             `: null}
         </div>
     </div>

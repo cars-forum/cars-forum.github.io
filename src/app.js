@@ -11,6 +11,7 @@ import { showRegisterView } from './views/registerView.js';
 import { showTopicView } from './views/topicView.js';
 import { showCreateTopicView } from './views/createTopicView.js';
 import { showReplyView } from './views/replyView.js';
+import { showEditTopicView } from './views/editTopicView.js';
 
 const root = document.querySelector('main');
 
@@ -28,6 +29,8 @@ page('/login', showLoginView);
 page('/topic/:id', showTopicView);
 page('/create-topic', showCreateTopicView);
 page('/reply/:id', showReplyView);
+page('/edit-topic/:id', showEditTopicView);
+// page('/edit-reply/:id');
 
 page.start();
 
