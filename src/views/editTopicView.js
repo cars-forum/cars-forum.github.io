@@ -30,10 +30,11 @@ export async function showEditTopicView(ctx) {
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
     const categoryList = await dataService.getAllCategories();
+    selectCurrentCategory(data, categoryList);
 
     ctx.render(template(data, categoryList, submitHandler(onEdit)));
 
-    async function onEdit({ "category":categoryId, title, content }, form) {
+    async function onEdit({ "category": categoryId, title, content }, form) {
         const locker = new FormLocker(['category', 'title', 'content', 'submit']);
         locker.lockForm();
 
@@ -66,5 +67,20 @@ export async function showEditTopicView(ctx) {
 
         form.reset();
         ctx.redirect('/topic/' + id);
+    }
+
+    function selectCurrentCategory(data, categoryList) {
+        const currentCategoryId = data.category.objectId;
+        const categoriesId = [];
+        categoryList.forEach(category => {
+            const { objectId } = category;
+            categoriesId.push(objectId);
+        });
+
+        const index = categoriesId.indexOf(currentCategoryId);
+        const currentCategory = categoryList.splice(index, 1);
+
+        categoryList.unshift(currentCategory[0]);
+        return categoryList;
     }
 }
