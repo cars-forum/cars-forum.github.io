@@ -34,7 +34,6 @@ export async function showEditTopicView(ctx) {
     ctx.render(template(data, categoryList, submitHandler(onEdit)));
 
     async function onEdit({ "category":categoryId, title, content }, form) {
-        debugger
         const locker = new FormLocker(['category', 'title', 'content', 'submit']);
         locker.lockForm();
 

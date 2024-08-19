@@ -11,7 +11,7 @@ const template = (data, replies, userData, isAdmin, handlers) => {
         </div>
         <div class="user-comment">
             <p>Replied at: ${new Date(item.createdAt).toLocaleString('uk-Uk')}</p>
-            <p>${item.content}</p>
+            ${item.content.map(par => html`<p>${par}</p>`)}
             ${isAdmin ? html`
                 <a href="/edit-reply/${item.objectId}" class="button">Edit</a>
             `: null}
@@ -39,7 +39,7 @@ const template = (data, replies, userData, isAdmin, handlers) => {
         </div>
         <div class="user-comment">
             <p>Published at: ${new Date(data.createdAt).toLocaleString('uk-Uk')}</p>
-            <p>${data.content}</p>
+            ${data.content.map(par => html`<p>${par}</p>`)}
             ${isAdmin ? html`
                 <a href="/edit-topic/${data.objectId}" class="button">Edit</a>
             `: null}
@@ -58,7 +58,13 @@ const template = (data, replies, userData, isAdmin, handlers) => {
 export async function showTopicView(ctx) {
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
-    const replies = await dataService.getAllReplies(id);
+    let replies = await dataService.getAllReplies(id);
+    data.content = data.content.split('\n');
+    replies = replies.map(rep => {
+        const result = { ...rep }
+        result.content = rep.content.split('\n');
+        return result;
+    });
     const userData = ctx.userUtils.getUserData();
     const isAdmin = ctx.userUtils.isAdmin();
     const handlers = {
@@ -71,7 +77,7 @@ export async function showTopicView(ctx) {
     async function lockTopic(e) {
         const confirmation = confirm('Do you want to lock this topic?');
 
-        if(!confirmation){
+        if (!confirmation) {
             return;
         }
 
@@ -84,7 +90,7 @@ export async function showTopicView(ctx) {
     async function unlockTopic(e) {
         const confirmation = confirm('Do you want to unlock this topic?');
 
-        if(!confirmation){
+        if (!confirmation) {
             return;
         }
 
