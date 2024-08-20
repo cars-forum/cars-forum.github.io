@@ -2,10 +2,11 @@ import { api } from "./api.js";
 
 const endpoints = {
     topicsOfCategory: (categoryId) => `/classes/Posts/?include=author&where={"category":{"__type":"Pointer","className":"Categories","objectId":"${categoryId}"}}`,
-    categories: '/classes/Categories/?order=createdAt',
+    categories: '/classes/Categories/?order=isLast,createdAt',
     topic: (topicId) => `/classes/Posts/${topicId}?include=author`,
     creatingPost: '/classes/Posts',
     creatingReply: '/classes/Replies',
+    creatingCategory: '/classes/Categories',
     allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author`,
     changeTopic: (postId) => `/classes/Posts/${postId}`,
     reply: (replyId) => `/classes/Replies/${replyId}?include=post`,
@@ -68,6 +69,10 @@ async function editReply(replyId, content) {
     return await api.put(endpoints.changeReply(replyId), { content });
 }
 
+async function createNewCategory(title) {
+    return await api.post(endpoints.creatingCategory, { title });
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -78,5 +83,6 @@ export const dataService = {
     changeTopicLockingState,
     editTopic,
     getReplyDetails,
-    editReply
+    editReply,
+    createNewCategory
 };
