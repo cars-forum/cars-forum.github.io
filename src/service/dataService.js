@@ -73,6 +73,14 @@ async function createNewCategory(title) {
     return await api.post(endpoints.creatingCategory, { title });
 }
 
+async function archiveTopic(postId) {
+    return await api.put(endpoints.changeTopic(postId), {
+        isLocked: true, category: {
+            "__type": "Pointer", "className": "Categories", "objectId": "IHKYWUnBbb"
+        }
+    });
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -84,5 +92,6 @@ export const dataService = {
     editTopic,
     getReplyDetails,
     editReply,
-    createNewCategory
+    createNewCategory,
+    archiveTopic
 };

@@ -27,7 +27,7 @@ const template = (data, replies, userData, isAdmin, handlers) => {
         `: html`
             <a @click=${handlers.lockTopic} data-id="${data.objectId}" href="javascript:void(0)" class="button">Lock</a>
         `}
-        <a href="javascript:void(0)" class="button">Archive</a>
+        <a @click=${handlers.archiveTopic} data-id="${data.objectId}" href="javascript:void(0)" class="button">Archive</a>
     </div>
     `: null}
     <h1>${data.title}</h1>
@@ -69,7 +69,8 @@ export async function showTopicView(ctx) {
     const isAdmin = ctx.userUtils.isAdmin();
     const handlers = {
         lockTopic,
-        unlockTopic
+        unlockTopic,
+        archiveTopic
     };
 
     ctx.render(template(data, replies, userData, isAdmin, handlers));
@@ -83,7 +84,12 @@ export async function showTopicView(ctx) {
 
         const currentTarget = e.currentTarget;
         const postId = currentTarget.getAttribute('data-id');
-        await dataService.changeTopicLockingState(postId, true);
+        try {
+            await dataService.changeTopicLockingState(postId, true);
+            
+        } catch (error) {
+            return;
+        }
         ctx.redirect('/topic/' + id);
     }
 
@@ -96,7 +102,32 @@ export async function showTopicView(ctx) {
 
         const currentTarget = e.currentTarget;
         const postId = currentTarget.getAttribute('data-id');
-        await dataService.changeTopicLockingState(postId, false);
+        try {
+            await dataService.changeTopicLockingState(postId, false);
+            
+        } catch (error) {
+            return;
+        }
         ctx.redirect('/topic/' + id);
+    }
+
+    async function archiveTopic(e) {
+        const confirmation = confirm('Do you want to archive this topic?');
+
+        if (!confirmation) {
+            return;
+        }
+
+        const currentTarget = e.currentTarget;
+        const postId = currentTarget.getAttribute('data-id');
+
+        try {
+            await dataService.archiveTopic(postId);
+            
+        } catch (error) {
+            return;
+        }
+
+        ctx.redirect('/');
     }
 }
