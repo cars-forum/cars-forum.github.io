@@ -3,6 +3,7 @@ import { api } from "./api.js";
 const endpoints = {
     topicsOfCategory: (categoryId) => `/classes/Posts/?include=author&where={"category":{"__type":"Pointer","className":"Categories","objectId":"${categoryId}"}}`,
     categories: '/classes/Categories/?order=isLast,createdAt',
+    categoriesNoLast: '/classes/Categories/?where={"isLast":false}&order=createdAt',
     topic: (topicId) => `/classes/Posts/${topicId}?include=author`,
     creatingPost: '/classes/Posts',
     creatingReply: '/classes/Replies',
@@ -13,8 +14,12 @@ const endpoints = {
     changeReply: (replyId) => `/classes/Replies/${replyId}`
 }
 
-async function getAllCategories() {
-    const result = await api.get(endpoints.categories);
+async function getAllCategories(withoutLast = false) {
+    let url = endpoints.categories;
+    if (withoutLast) {
+        url = endpoints.categoriesNoLast;
+    }
+    const result = await api.get(url);
     return result.results;
 }
 

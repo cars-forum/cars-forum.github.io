@@ -27,7 +27,7 @@ const categoryTemplate = (item) => html`
 `
 
 export async function showCreateTopicView(ctx) {
-    const categoryList = await dataService.getAllCategories();
+    const categoryList = await dataService.getAllCategories(true);
     ctx.render(template(categoryList, submitHandler(onCreate)));
 
 
