@@ -17,7 +17,7 @@ export function updateNav() {
         <li><a href="/">Home</a></li>
     
         ${userData ? html`
-            <li><a href="profile.html">Profile: ${userData.username}</a></li>
+            <li><a href="/profile/${userData.objectId}">Profile: ${userData.username}</a></li>
             <li><a @click=${onLogout} href="javascript:void(0)">Logout</a></li>
         `: html`
             <li><a href="/login">Login</a></li>
