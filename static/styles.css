@@ -352,6 +352,51 @@ form button:hover {
     background-color: #762f00;
 }
 
+/* Edit Reply Styles */
+#edit-reply {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+#edit-reply h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#edit-reply form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#edit-reply form input[type="text"],
+#edit-reply form textarea,
+#edit-reply form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#edit-reply form button {
+    padding: 10px 20px;
+    background-color: #FF6400;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#edit-reply form button:hover {
+    background-color: #762f00;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #topic .comment {

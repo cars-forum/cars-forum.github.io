@@ -7,7 +7,9 @@ const endpoints = {
     creatingPost: '/classes/Posts',
     creatingReply: '/classes/Replies',
     allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author`,
-    changeTopic: (postId) => `/classes/Posts/${postId}`
+    changeTopic: (postId) => `/classes/Posts/${postId}`,
+    reply: (replyId) => `/classes/Replies/${replyId}?include=post`,
+    changeReply: (replyId) => `/classes/Replies/${replyId}`
 }
 
 async function getAllCategories() {
@@ -58,6 +60,14 @@ async function editTopic(postId, categoryId, title, content) {
     });
 }
 
+async function getReplyDetails(replyId) {
+    return await api.get(endpoints.reply(replyId));
+}
+
+async function editReply(replyId, content) {
+    return await api.put(endpoints.changeReply(replyId), { content });
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -66,5 +76,7 @@ export const dataService = {
     addNewReply,
     getAllReplies,
     changeTopicLockingState,
-    editTopic
+    editTopic,
+    getReplyDetails,
+    editReply
 };

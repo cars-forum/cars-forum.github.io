@@ -62,6 +62,7 @@ export async function showEditTopicView(ctx) {
             await dataService.editTopic(id, categoryId, title, content);
 
         } catch (error) {
+            locker.unlockForm();
             return;
         }
 

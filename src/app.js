@@ -12,6 +12,7 @@ import { showTopicView } from './views/topicView.js';
 import { showCreateTopicView } from './views/createTopicView.js';
 import { showReplyView } from './views/replyView.js';
 import { showEditTopicView } from './views/editTopicView.js';
+import { showEditReplyView } from './views/editReplyView.js';
 
 const root = document.querySelector('main');
 
@@ -30,7 +31,7 @@ page('/topic/:id', showTopicView);
 page('/create-topic', showCreateTopicView);
 page('/reply/:id', showReplyView);
 page('/edit-topic/:id', showEditTopicView);
-// page('/edit-reply/:id');
+page('/edit-reply/:id', showEditReplyView);
 
 page.start();
 
