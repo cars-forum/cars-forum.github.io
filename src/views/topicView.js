@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { dataService } from "../service/dataService.js";
 
-const template = (data, replies, userData, isAdmin, handlers) => {
+const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
     const commentTemplate = (item) => html`
     <div class="comment">
         <div class="user-info">
@@ -20,7 +20,7 @@ const template = (data, replies, userData, isAdmin, handlers) => {
 `
     return html`
     <section id="topic">
-    ${isAdmin ? html`
+    ${isAdmin && !isArchived  ? html`
     <div class="admin-panel">
         ${data.isLocked ? html`
             <a @click=${handlers.unlockTopic} data-id="${data.objectId}" href="javascript:void(0)" class="button">Unlock</a>
@@ -67,13 +67,14 @@ export async function showTopicView(ctx) {
     });
     const userData = ctx.userUtils.getUserData();
     const isAdmin = ctx.userUtils.isAdmin();
+    const isArchived = data.category.objectId === "IHKYWUnBbb";
     const handlers = {
         lockTopic,
         unlockTopic,
         archiveTopic
     };
 
-    ctx.render(template(data, replies, userData, isAdmin, handlers));
+    ctx.render(template(data, replies, userData, isAdmin, isArchived, handlers));
 
     async function lockTopic(e) {
         const confirmation = confirm('Do you want to lock this topic?');
