@@ -28,11 +28,23 @@ function isAdmin() {
     return roleId === ROLES.admin;
 }
 
+function isModerator() {
+    const roleId = getUserData()?.roleId;
+    return roleId === ROLES.moderator;
+}
+
+function isTopUser() {
+    const roleId = getUserData()?.roleId;
+    return roleId === ROLES.topUser;
+}
+
 export const user = {
     setUserData,
     getUserData,
     clearUserData,
     getSessionToken,
     // isOwner,
-    isAdmin
+    isAdmin,
+    isModerator,
+    isTopUser,
 };

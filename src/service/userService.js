@@ -4,7 +4,8 @@ import { api } from "./api.js";
 const endpoints = {
     register: '/users',
     login: '/login',
-    logout: '/logout'
+    logout: '/logout',
+    userInfo: (userId) => `/users/${userId}?include=role`
 }
 
 async function register(username, email, password) {
@@ -37,8 +38,13 @@ async function logout() {
     user.clearUserData();
 }
 
+async function getUserInfo(userId) {
+    return await api.get(endpoints.userInfo(userId));
+}
+
 export const userService = {
     register,
     login,
-    logout
+    logout,
+    getUserInfo
 }

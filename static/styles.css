@@ -512,6 +512,11 @@ form button:hover {
     font-size: 16px;
 }
 
+#user-details #role-info{
+    background-color: blue;
+    border-radius: 90px 20px 90px 20px;
+}
+
 #user-details form button:hover {
     background-color: #762f00;
     transition: 400ms;
