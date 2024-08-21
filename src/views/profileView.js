@@ -1,7 +1,11 @@
 import { html } from '@lit/lit-html.js';
+import { styleMap } from '@lit/directives/style-map.js';
 import { userService } from '../service/userService.js';
+import { roleStyles } from '../utils/stylesUtils.js';
 
-const template = (data, userData, roles) => html`
+const template = (data, userData, roles) => {
+    const roleStyle = roleStyles[data["role"]["objectId"]];
+return html`
 <section id="user-details">
     <h1>Profile Details</h1>
     <div class="user-info">
@@ -16,18 +20,18 @@ const template = (data, userData, roles) => html`
         ${data.location ? html`
             <p>Location: <span id="location">${data.location}</span></p>
         `: null}
-        <p><span id="role-info">${data.role.name}</span></p>
+        <p><span style=${styleMap(roleStyle)} id="role-info">${data.role.name}</span></p>
     </div>
     ${userData ? html`
         <form>
-            ${roles.isAdmin ? formAdmin() : 
+                ${roles.isAdmin ? formAdmin() :
                 roles.isModerator ? formModerator() :
                 roles.isTopUser ? formTopUser() : formUser()}
         </form>
     ` : null}
     
 </section>
-`
+`}
 
 const formUser = () => html`
         <!-- Avatar URL Field -->
