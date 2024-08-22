@@ -4,11 +4,11 @@ const endpoints = {
     topicsOfCategory: (categoryId) => `/classes/Posts/?include=author&where={"category":{"__type":"Pointer","className":"Categories","objectId":"${categoryId}"}}`,
     categories: '/classes/Categories/?order=isLast,createdAt',
     categoriesNoLast: '/classes/Categories/?where={"isLast":false}&order=createdAt',
-    topic: (topicId) => `/classes/Posts/${topicId}?include=author`,
+    topic: (topicId) => `/classes/Posts/${topicId}?include=author,author.role`,
     creatingPost: '/classes/Posts',
     creatingReply: '/classes/Replies',
     creatingCategory: '/classes/Categories',
-    allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author`,
+    allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author,author.role`,
     changeTopic: (postId) => `/classes/Posts/${postId}`,
     reply: (replyId) => `/classes/Replies/${replyId}?include=post`,
     changeReply: (replyId) => `/classes/Replies/${replyId}`

@@ -1,14 +1,29 @@
 import { html } from "@lit/lit-html.js";
+import { styleMap } from '@lit/directives/style-map.js';
 import { dataService } from "../service/dataService.js";
+import { roleStyles } from "../utils/stylesUtils.js";
 
 const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
+    const userCardTemplate = (data) => {
+        const roleStyle = roleStyles[data["author"]["role"]["objectId"]];
+        return html`
+    <div class="user-details">
+        ${data.author.avatar === 'avatar.png' ? html`
+            <img src="/static/img/${data.author.avatar}" alt="User Avatar" id="avatar-img">
+        `: html`
+            <img src="${data.author.avatar}" alt="User Avatar" id="avatar-img">
+        `}
+        <p><a href="/profile/${data.author.objectId}">${data.author.username}</a></p>
+        <p>Registered on: <span id="registered-on">${new Date(data.author.createdAt).toLocaleDateString('uk-Uk')}</span></p> 
+        ${data.location ? html`
+            <p>Location: <span id="location">${data.location}</span></p>
+        `: null}
+        <p><span style=${styleMap(roleStyle)} id="role-info">${data.author.role.name}</span></p>
+    `}
+
     const commentTemplate = (item) => html`
     <div class="comment">
-        <div class="user-info">
-            <img src="/static/img/avatar.png" alt="User Avatar">
-            <p><a href="/profile/${item.author.objectId}">${item.author.username}</a></p>
-            <p>Additional Info</p>
-        </div>
+        ${userCardTemplate(item)}
         <div class="user-comment">
             <p>Replied at: ${new Date(item.createdAt).toLocaleString('uk-Uk')}</p>
             ${item.content.map(par => html`<p>${par}</p>`)}
@@ -18,6 +33,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         </div>
     </div>
 `
+
     return html`
     <section id="topic">
     ${isAdmin && !isArchived  ? html`
@@ -32,11 +48,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
     `: null}
     <h1>${data.title}</h1>
     <div class="comment">
-        <div class="user-info">
-            <img src="/static/img/avatar.png" alt="User Avatar">
-            <p><a href="/profile/${data.author.objectId}">${data.author.username}</a></p>
-            <p>Additional Info</p>
-        </div>
+        ${userCardTemplate(data)}
         <div class="user-comment">
             <p>Published at: ${new Date(data.createdAt).toLocaleString('uk-Uk')}</p>
             ${data.content.map(par => html`<p>${par}</p>`)}
@@ -58,6 +70,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
 export async function showTopicView(ctx) {
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
+    debugger;
     let replies = await dataService.getAllReplies(id);
     data.content = data.content.split('\n');
     replies = replies.map(rep => {

@@ -2,7 +2,7 @@ import { html } from '@lit/lit-html.js';
 import { styleMap } from '@lit/directives/style-map.js';
 import { userService } from '../service/userService.js';
 import { roleStyles } from '../utils/stylesUtils.js';
-import { profileFormTemplates } from '../templates/profileForm.js';
+import { profileFormTemplates } from '../templates/profileTemplates.js';
 
 const template = (data, userData, roles) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
