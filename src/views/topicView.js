@@ -6,7 +6,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
     <div class="comment">
         <div class="user-info">
             <img src="/static/img/avatar.png" alt="User Avatar">
-            <p>${item.author.username}</p>
+            <p><a href="/profile/${item.author.objectId}">${item.author.username}</a></p>
             <p>Additional Info</p>
         </div>
         <div class="user-comment">
@@ -34,7 +34,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
     <div class="comment">
         <div class="user-info">
             <img src="/static/img/avatar.png" alt="User Avatar">
-            <p>${data.author.username}</p>
+            <p><a href="/profile/${data.author.objectId}">${data.author.username}</a></p>
             <p>Additional Info</p>
         </div>
         <div class="user-comment">

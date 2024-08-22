@@ -2,9 +2,11 @@ import { html } from '@lit/lit-html.js';
 import { styleMap } from '@lit/directives/style-map.js';
 import { userService } from '../service/userService.js';
 import { roleStyles } from '../utils/stylesUtils.js';
+import { profileFormTemplates } from '../templates/profileForm.js';
 
 const template = (data, userData, roles) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
+    const isOwner = data.objectId === userData?.objectId;
 return html`
 <section id="user-details">
     <h1>Profile Details</h1>
@@ -22,120 +24,14 @@ return html`
         `: null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.role.name}</span></p>
     </div>
-    ${userData ? html`
+    ${isOwner || roles.isAdmin || roles.isModerator ? html`
         <form>
-                ${roles.isAdmin ? formAdmin() :
-                roles.isModerator ? formModerator() :
-                roles.isTopUser ? formTopUser() : formUser()}
+            ${profileFormTemplates[userData.roleId]()}
         </form>
     ` : null}
     
 </section>
 `}
-
-const formUser = () => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
-`
-const formTopUser = () => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
-
-        <!-- Preferred Manufacturer Field -->
-        <label for="preferred-manufacturer">Preferred Manufacturer</label>
-        <select id="preferred-manufacturer" name="preferred-manufacturer">
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="bmw">BMW</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="ford">Ford</option>
-            <option value="chevrolet">Chevrolet</option>
-        </select>
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
-`
-const formModerator = () => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
-
-        <!-- Preferred Manufacturer Field -->
-        <label for="preferred-manufacturer">Preferred Manufacturer</label>
-        <select id="preferred-manufacturer" name="preferred-manufacturer">
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="bmw">BMW</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="ford">Ford</option>
-            <option value="chevrolet">Chevrolet</option>
-        </select>
-
-        <!-- Ban Until Date and Time Picker -->
-        <div class="ban-until">
-            <label for="ban-until">Ban Until</label>
-            <input disabled type="datetime-local" id="ban-until" name="ban-until">
-            <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
-`
-const formAdmin = () => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
-
-        <!-- Preferred Manufacturer Field -->
-        <label for="preferred-manufacturer">Preferred Manufacturer</label>
-        <select id="preferred-manufacturer" name="preferred-manufacturer">
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="bmw">BMW</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="ford">Ford</option>
-            <option value="chevrolet">Chevrolet</option>
-        </select>
-
-        <!-- Role Selection Field -->
-        <label for="role">Role</label>
-        <select id="role" name="role">
-            <option value="member">Member</option>
-            <option value="moderator">Moderator</option>
-            <option value="admin">Admin</option>
-        </select>
-
-        <!-- Ban Until Date and Time Picker -->
-        <div class="ban-until">
-            <label for="ban-until">Ban Until</label>
-            <input disabled type="datetime-local" id="ban-until" name="ban-until">
-            <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
-`
 
 export async function showProfileView(ctx) {
     const userId = ctx.params.id;
