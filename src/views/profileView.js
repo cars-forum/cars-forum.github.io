@@ -25,7 +25,7 @@ const template = (data, userData, roles, brands, updateHandler) => {
         ${data.location ? html`
             <p>Location: <span id="location">${data.location}</span></p>
         `: null}
-        ${data.preferredManufacturer ? html`<p>Prefers: <img style=${styleMap(brandStyle)} src="${data.preferredManufacturer}"></p>`:null}
+        ${data.preferredManufacturer ? html`<p>Prefers: <br /> <img style=${styleMap(brandStyle)} src="${data.preferredManufacturer}"></p>`:null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.role.name}</span></p>
     </div>
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
