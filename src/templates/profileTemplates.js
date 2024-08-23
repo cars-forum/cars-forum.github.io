@@ -13,47 +13,28 @@ const formUser = (data) => html`
 
         <!-- Location Field -->
         <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}> 
+        ${data.location ? html`
+            <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
+        `: html`
+            <input type="text" id="location" name="location" placeholder="Enter location">
+        `} 
 `
-const formTopUser = (data) => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
+const formTopUser = (data, brands) => html`
+        ${formUser(data)}
 
         <!-- Preferred Manufacturer Field -->
         <label for="preferred-manufacturer">Preferred Manufacturer</label>
         <select id="preferred-manufacturer" name="preferred-manufacturer">
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="bmw">BMW</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="ford">Ford</option>
-            <option value="chevrolet">Chevrolet</option>
+            <option value="none"></option>
+            ${brands.map(brand => html`
+                <optgroup label="${brand.country}">
+                    ${Object.entries(brand.brandsList).map(pair => html`<option value="${pair[1]}">${pair[0]}</option>`)}
+                </optgroup>
+            `)}
         </select>
 `
 const formModerator = (data) => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
-
-        <!-- Preferred Manufacturer Field -->
-        <label for="preferred-manufacturer">Preferred Manufacturer</label>
-        <select id="preferred-manufacturer" name="preferred-manufacturer">
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="bmw">BMW</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="ford">Ford</option>
-            <option value="chevrolet">Chevrolet</option>
-        </select>
+        ${formTopUser(data)}
 
         <!-- Ban Until Date and Time Picker -->
         <div class="ban-until">
@@ -63,28 +44,7 @@ const formModerator = (data) => html`
         </div>
 `
 const formAdmin = (data) => html`
-        <!-- Avatar URL Field -->
-        <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
-
-        <!-- Location Field -->
-        <label for="location">Location</label>
-        ${data.location ? html`
-            <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
-        `: html`
-            <input type="text" id="location" name="location" placeholder="Enter location">
-        `}
-
-        <!-- Preferred Manufacturer Field -->
-        <label for="preferred-manufacturer">Preferred Manufacturer</label>
-        <select id="preferred-manufacturer" name="preferred-manufacturer">
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="bmw">BMW</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="ford">Ford</option>
-            <option value="chevrolet">Chevrolet</option>
-        </select>
+        ${formModerator(data)}
 
         <!-- Role Selection Field -->
         <label for="role">Role</label>
@@ -93,13 +53,6 @@ const formAdmin = (data) => html`
             <option value="moderator">Moderator</option>
             <option value="admin">Admin</option>
         </select>
-
-        <!-- Ban Until Date and Time Picker -->
-        <div class="ban-until">
-            <label for="ban-until">Ban Until</label>
-            <input disabled type="datetime-local" id="ban-until" name="ban-until">
-            <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
-        </div>
 `
 
 const profileFormTemplates = {}

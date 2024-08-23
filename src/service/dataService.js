@@ -11,7 +11,8 @@ const endpoints = {
     allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author,author.role`,
     changeTopic: (postId) => `/classes/Posts/${postId}`,
     reply: (replyId) => `/classes/Replies/${replyId}?include=post`,
-    changeReply: (replyId) => `/classes/Replies/${replyId}`
+    changeReply: (replyId) => `/classes/Replies/${replyId}`,
+    allBrands: '/classes/Brands'
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -86,6 +87,11 @@ async function archiveTopic(postId) {
     });
 }
 
+async function getAllBrands() {
+    const result = await api.get(endpoints.allBrands);
+    return result.results
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -98,5 +104,6 @@ export const dataService = {
     getReplyDetails,
     editReply,
     createNewCategory,
-    archiveTopic
+    archiveTopic,
+    getAllBrands
 };

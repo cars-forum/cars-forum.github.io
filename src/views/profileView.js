@@ -3,11 +3,12 @@ import { styleMap } from '@lit/directives/style-map.js';
 import { userService } from '../service/userService.js';
 import { roleStyles } from '../utils/stylesUtils.js';
 import { profileFormTemplates } from '../templates/profileTemplates.js';
+import { dataService } from '../service/dataService.js';
 
-const template = (data, userData, roles) => {
+const template = (data, userData, roles, brands) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
     const isOwner = data.objectId === userData?.objectId;
-return html`
+    return html`
 <section id="user-details">
     <h1>Profile Details</h1>
     <div class="user-info">
@@ -26,7 +27,7 @@ return html`
     </div>
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
         <form>
-            ${profileFormTemplates[userData.roleId](data)}
+            ${profileFormTemplates[userData.roleId](data, brands)}
             <button type="submit" class="update-button">Update</button>
         </form>
     ` : null}
@@ -44,5 +45,10 @@ export async function showProfileView(ctx) {
         isTopUser: ctx.userUtils.isTopUser()
     };
 
-    ctx.render(template(data, userData, roles));
+    let brands = null;
+    if (Object.values(roles).some(val => val === true)) {
+        brands = await dataService.getAllBrands();
+    }
+
+    ctx.render(template(data, userData, roles, brands));
 }

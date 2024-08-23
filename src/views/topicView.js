@@ -15,8 +15,8 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         `}
         <p><a href="/profile/${data.author.objectId}">${data.author.username}</a></p>
         <p>Registered on: <span id="registered-on">${new Date(data.author.createdAt).toLocaleDateString('uk-Uk')}</span></p> 
-        ${data.location ? html`
-            <p>Location: <span id="location">${data.location}</span></p>
+        ${data.author.location ? html`
+            <p>Location: <span id="location">${data.author.location}</span></p>
         `: null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.author.role.name}</span></p>
     `}
@@ -144,3 +144,4 @@ export async function showTopicView(ctx) {
         ctx.redirect('/');
     }
 }
+
