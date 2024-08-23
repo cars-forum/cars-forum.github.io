@@ -6,26 +6,23 @@ const topUserKey = ROLES.topUser;
 const moderatorKey = ROLES.moderator;
 const adminKey = ROLES.admin;
 
-const formUser = () => html`
+const formUser = (data) => html`
         <!-- Avatar URL Field -->
         <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
+        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
 
         <!-- Location Field -->
         <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
+        <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}> 
 `
-const formTopUser = () => html`
+const formTopUser = (data) => html`
         <!-- Avatar URL Field -->
         <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
+        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
 
         <!-- Location Field -->
         <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
+        <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
 
         <!-- Preferred Manufacturer Field -->
         <label for="preferred-manufacturer">Preferred Manufacturer</label>
@@ -37,18 +34,15 @@ const formTopUser = () => html`
             <option value="ford">Ford</option>
             <option value="chevrolet">Chevrolet</option>
         </select>
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
 `
-const formModerator = () => html`
+const formModerator = (data) => html`
         <!-- Avatar URL Field -->
         <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
+        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
 
         <!-- Location Field -->
         <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
+        <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
 
         <!-- Preferred Manufacturer Field -->
         <label for="preferred-manufacturer">Preferred Manufacturer</label>
@@ -67,18 +61,19 @@ const formModerator = () => html`
             <input disabled type="datetime-local" id="ban-until" name="ban-until">
             <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
         </div>
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
 `
-const formAdmin = () => html`
+const formAdmin = (data) => html`
         <!-- Avatar URL Field -->
         <label for="avatar-url">Avatar URL</label>
-        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL">
+        <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
 
         <!-- Location Field -->
         <label for="location">Location</label>
-        <input type="text" id="location" name="location" placeholder="Enter location">
+        ${data.location ? html`
+            <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
+        `: html`
+            <input type="text" id="location" name="location" placeholder="Enter location">
+        `}
 
         <!-- Preferred Manufacturer Field -->
         <label for="preferred-manufacturer">Preferred Manufacturer</label>
@@ -105,9 +100,6 @@ const formAdmin = () => html`
             <input disabled type="datetime-local" id="ban-until" name="ban-until">
             <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
         </div>
-
-        <!-- Submit Button -->
-        <button type="submit" class="update-button">Update</button>
 `
 
 const profileFormTemplates = {}

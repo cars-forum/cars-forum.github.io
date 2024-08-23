@@ -26,7 +26,8 @@ return html`
     </div>
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
         <form>
-            ${profileFormTemplates[userData.roleId]()}
+            ${profileFormTemplates[userData.roleId](data)}
+            <button type="submit" class="update-button">Update</button>
         </form>
     ` : null}
     

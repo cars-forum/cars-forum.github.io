@@ -70,7 +70,6 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
 export async function showTopicView(ctx) {
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
-    debugger;
     let replies = await dataService.getAllReplies(id);
     data.content = data.content.split('\n');
     replies = replies.map(rep => {
