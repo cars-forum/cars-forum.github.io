@@ -33,8 +33,8 @@ const formTopUser = (data, brands) => html`
             `)}
         </select>
 `
-const formModerator = (data) => html`
-        ${formTopUser(data)}
+const formModerator = (data, brands) => html`
+        ${formTopUser(data, brands)}
 
         <!-- Ban Until Date and Time Picker -->
         <div class="ban-until">
@@ -43,8 +43,8 @@ const formModerator = (data) => html`
             <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
         </div>
 `
-const formAdmin = (data) => html`
-        ${formModerator(data)}
+const formAdmin = (data, brands) => html`
+        ${formModerator(data, brands)}
 
         <!-- Role Selection Field -->
         <label for="role">Role</label>

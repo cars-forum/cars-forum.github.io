@@ -4,9 +4,11 @@ import { userService } from '../service/userService.js';
 import { roleStyles } from '../utils/stylesUtils.js';
 import { profileFormTemplates } from '../templates/profileTemplates.js';
 import { dataService } from '../service/dataService.js';
+import { FormLocker, submitHandler } from '../utils/submitUtil.js';
 
-const template = (data, userData, roles, brands) => {
+const template = (data, userData, roles, brands, updateHandler) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
+    const brandStyle = {width:"60px", height:"60px"};
     const isOwner = data.objectId === userData?.objectId;
     return html`
 <section id="user-details">
@@ -23,12 +25,13 @@ const template = (data, userData, roles, brands) => {
         ${data.location ? html`
             <p>Location: <span id="location">${data.location}</span></p>
         `: null}
+        ${data.preferredManufacturer ? html`<p>Prefers: <img style=${styleMap(brandStyle)} src="${data.preferredManufacturer}"></p>`:null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.role.name}</span></p>
     </div>
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
-        <form>
+        <form @submit=${updateHandler}>
             ${profileFormTemplates[userData.roleId](data, brands)}
-            <button type="submit" class="update-button">Update</button>
+            <button id="submit" type="submit" class="update-button">Update</button>
         </form>
     ` : null}
     
@@ -50,5 +53,38 @@ export async function showProfileView(ctx) {
         brands = await dataService.getAllBrands();
     }
 
-    ctx.render(template(data, userData, roles, brands));
+    ctx.render(template(data, userData, roles, brands, submitHandler(onUpdate)));
+
+    async function onUpdate({ "avatar-url": avatar, location, "preferred-manufacturer": preferredManufacturer }) {
+        const locker = new FormLocker(['avatar-url',
+            'location',
+            'preferred-manufacturer',
+            'ban-until',
+            'role',
+            'submit']);
+        locker.lockForm();
+        const updateData = {};
+
+        if (avatar && avatar !== data?.avatar) {
+            updateData.avatar = avatar;
+        }
+
+        if (location && location!==data?.location) {
+            updateData.location = location;
+        }
+
+        if (preferredManufacturer && preferredManufacturer !== 'none') {
+            updateData.preferredManufacturer = preferredManufacturer;
+        }
+
+        try {
+            await userService.updateUserInfo(userId, updateData);
+
+        } catch (error) {
+            locker.unlockForm();
+            return;
+        }
+        locker.unlockForm();
+        ctx.redirect('/profile/' + userId);
+    }
 }

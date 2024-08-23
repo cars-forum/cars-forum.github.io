@@ -526,6 +526,12 @@ form button:hover {
     border-radius: 90px 20px 90px 20px;
 }
 
+/* .user-details .brand-label{
+    display: flex;
+    align-items: center; 
+    padding-right: 10px;
+} */
+
 #user-details form button:hover {
     background-color: #762f00;
     transition: 400ms;

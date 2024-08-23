@@ -5,7 +5,8 @@ const endpoints = {
     register: '/users',
     login: '/login',
     logout: '/logout',
-    userInfo: (userId) => `/users/${userId}?include=role`
+    userInfo: (userId) => `/users/${userId}?include=role`,
+    updateProfile: (userId) => `/users/${userId}`
 }
 
 async function register(username, email, password) {
@@ -42,9 +43,14 @@ async function getUserInfo(userId) {
     return await api.get(endpoints.userInfo(userId));
 }
 
+async function updateUserInfo(userId, data) {
+    return await api.put(endpoints.updateProfile(userId), data);
+}
+
 export const userService = {
     register,
     login,
     logout,
-    getUserInfo
+    getUserInfo,
+    updateUserInfo
 }

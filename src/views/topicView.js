@@ -6,6 +6,7 @@ import { roleStyles } from "../utils/stylesUtils.js";
 const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
     const userCardTemplate = (data) => {
         const roleStyle = roleStyles[data["author"]["role"]["objectId"]];
+        const brandStyle = {width:"60px", height:"60px"};
         return html`
     <div class="user-details">
         ${data.author.avatar === 'avatar.png' ? html`
@@ -18,6 +19,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         ${data.author.location ? html`
             <p>Location: <span id="location">${data.author.location}</span></p>
         `: null}
+        ${data.author.preferredManufacturer ? html`<p class="brand-label">Prefers:<br /> <img style=${styleMap(brandStyle)} src="${data.author.preferredManufacturer}"></p>`:null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.author.role.name}</span></p>
     `}
 
