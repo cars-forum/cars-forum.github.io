@@ -155,4 +155,3 @@ export async function showTopicView(ctx) {
         ctx.redirect('/');
     }
 }
-

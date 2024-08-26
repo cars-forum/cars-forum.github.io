@@ -1,5 +1,6 @@
 import { user } from "../utils/userUtils.js";
 import { api } from "./api.js";
+import { ROLES } from "./roles.js";
 
 const endpoints = {
     register: '/users',
@@ -53,4 +54,25 @@ export const userService = {
     logout,
     getUserInfo,
     updateUserInfo
+}
+
+async function changeRole(roleId, userId) {
+    return await api.put(endpoints.updateProfile(userId), {
+        role: { __type: 'Pointer', className: '_Role', objectId: roleId }
+    });
+}
+
+const changeToUser = (userId) => changeRole(ROLES.user, userId);
+
+const changeToTopUser = (userId) => changeRole(ROLES.topUser, userId);
+
+const changeToModerator = (userId) => changeRole(ROLES.moderator, userId);
+
+const changeToAdmin = (userId) => changeRole(ROLES.admin, userId);
+
+export const roleService = {
+    user: changeToUser,
+    topUser:changeToTopUser,
+    moderator: changeToModerator,
+    admin: changeToAdmin
 }

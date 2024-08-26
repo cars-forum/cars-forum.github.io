@@ -49,7 +49,9 @@ const formAdmin = (data, brands) => html`
         <!-- Role Selection Field -->
         <label for="role">Role</label>
         <select id="role" name="role">
-            <option value="member">Member</option>
+            <option value="none"></option>
+            <option value="user">User</option>
+            <option value="topUser">Top User</option>
             <option value="moderator">Moderator</option>
             <option value="admin">Admin</option>
         </select>
