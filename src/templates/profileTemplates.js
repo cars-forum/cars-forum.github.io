@@ -1,5 +1,8 @@
 import { html } from "@lit/lit-html.js";
+import page from "@page/page.mjs";
+
 import { ROLES } from "../service/roles.js";
+import { userService } from "../service/userService.js";
 
 const userKey = ROLES.user;
 const topUserKey = ROLES.topUser;
@@ -10,14 +13,19 @@ const formUser = (data) => html`
         <!-- Avatar URL Field -->
         <label for="avatar-url">Avatar URL</label>
         <input type="text" id="avatar-url" name="avatar-url" placeholder="Enter new avatar URL" .value=${data.avatar}>
+        ${data.avatar !== 'avatar.png' ? html`
+            <a @click=${removeAvatar} data-id="${data.objectId}" class="button" href="javascript:void(0)">Remove</a>
+        `: null}
 
         <!-- Location Field -->
         <label for="location">Location</label>
         ${data.location ? html`
             <input type="text" id="location" name="location" placeholder="Enter location" .value=${data.location}>
+            <a @click=${removeLocation} data-id="${data.objectId}" class="button" href="javascript:void(0)">Remove</a>
         `: html`
             <input type="text" id="location" name="location" placeholder="Enter location">
-        `} 
+        `}
+        
 `
 const formTopUser = (data, brands) => html`
         ${formUser(data)}
@@ -32,6 +40,9 @@ const formTopUser = (data, brands) => html`
                 </optgroup>
             `)}
         </select>
+        ${data.preferredManufacturer ? html`
+            <a @click=${removePreferredManufacturer} data-id="${data.objectId}" class="button" href="javascript:void(0)">Remove</a>
+        `: null}
 `
 const formModerator = (data, brands) => html`
         ${formTopUser(data, brands)}
@@ -64,3 +75,38 @@ profileFormTemplates[moderatorKey] = formModerator;
 profileFormTemplates[adminKey] = formAdmin;
 
 export { profileFormTemplates };
+
+async function removeLocation(e) {
+    const userId = e.currentTarget.getAttribute('data-id');
+    try {
+        await userService.updateUserInfo(userId, { location: '' });
+
+    } catch (error) {
+        return;
+    }
+
+    page.redirect('/profile/' + userId);
+}
+
+async function removeAvatar(e) {
+    const userId = e.currentTarget.getAttribute('data-id');
+    try {
+        await userService.updateUserInfo(userId, { avatar: 'avatar.png' });
+
+    } catch (error) {
+        return;
+    }
+
+    page.redirect('/profile/' + userId);
+}
+
+async function removePreferredManufacturer(e) {
+    const userId = e.currentTarget.getAttribute('data-id');
+    try {
+        await userService.updateUserInfo(userId, { preferredManufacturer: '' });
+
+    } catch (error) {
+        return;
+    }
+    page.redirect('/profile/' + userId);
+}

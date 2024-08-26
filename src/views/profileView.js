@@ -32,6 +32,7 @@ const template = (data, userData, roles, brands, updateHandler) => {
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
         <form @submit=${updateHandler}>
             ${profileFormTemplates[userData.roleId](data, brands)}
+            <br />
             <button id="submit" type="submit" class="update-button">Update</button>
         </form>
     ` : null}
@@ -59,7 +60,6 @@ export async function showProfileView(ctx) {
     ctx.render(template(data, userData, roles, brands, submitHandler(onUpdate)));
 
     async function onUpdate({ "avatar-url": avatar, location, "preferred-manufacturer": preferredManufacturer, role }) {
-        debugger;
         const locker = new FormLocker(['avatar-url',
             'location',
             'preferred-manufacturer',

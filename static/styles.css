@@ -480,7 +480,7 @@ form button:hover {
 #user-details form input[type="text"],
 #user-details form select,
 #user-details form input[type="datetime-local"] {
-    width: 100%;
+    width: 80%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
