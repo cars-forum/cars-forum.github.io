@@ -20,6 +20,7 @@ const template = (data, userData, roles, brands, updateHandler) => {
             <img src="${data.avatar}" alt="User Avatar" id="avatar-img">
         `}
         <p>Username: <span id="username">${data.username}</span></p>
+        <p>Replies: <span id="replies">${data.repliesCount}</span></p>
         <p>Email: <span id="email">${data.email}</span></p>
         <p>Registered on: <span id="registered-on">${new Date(data.createdAt).toLocaleDateString('uk-Uk')}</span></p> 
         ${data.location ? html`
@@ -41,6 +42,8 @@ const template = (data, userData, roles, brands, updateHandler) => {
 export async function showProfileView(ctx) {
     const userId = ctx.params.id;
     const data = await userService.getUserInfo(userId);
+    const repliesCount = await dataService.getUserRepliesCount(data.objectId);
+    data.repliesCount = repliesCount;
     const userData = ctx.userUtils.getUserData();
     const roles = {
         isAdmin: ctx.userUtils.isAdmin(),

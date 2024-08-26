@@ -15,6 +15,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
             <img src="${data.author.avatar}" alt="User Avatar" id="avatar-img">
         `}
         <p><a href="/profile/${data.author.objectId}">${data.author.username}</a></p>
+        <p>Replies: <span id="replies">${data.author.repliesCount}</span></p>
         <p>Registered on: <span id="registered-on">${new Date(data.author.createdAt).toLocaleDateString('uk-Uk')}</span></p> 
         ${data.author.location ? html`
             <p>Location: <span id="location">${data.author.location}</span></p>
@@ -72,13 +73,21 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
 export async function showTopicView(ctx) {
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
+    const repliesCount = await dataService.getUserRepliesCount(data.author.objectId);
+    data.author.repliesCount = repliesCount;
     let replies = await dataService.getAllReplies(id);
     data.content = data.content.split('\n');
-    replies = replies.map(rep => {
+
+    replies = await Promise.all(replies.map(async rep => {
         const result = { ...rep }
         result.content = rep.content.split('\n');
+
+        const comRepliesCount = await dataService.getUserRepliesCount(rep.author.objectId);
+        result.author.repliesCount = comRepliesCount;
+
         return result;
-    });
+    }));
+
     const userData = ctx.userUtils.getUserData();
     const isAdmin = ctx.userUtils.isAdmin();
     const isArchived = data.category.objectId === "IHKYWUnBbb";

@@ -12,7 +12,9 @@ const endpoints = {
     changeTopic: (postId) => `/classes/Posts/${postId}`,
     reply: (replyId) => `/classes/Replies/${replyId}?include=post`,
     changeReply: (replyId) => `/classes/Replies/${replyId}`,
-    allBrands: '/classes/Brands'
+    allBrands: '/classes/Brands',
+    postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
+    repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -92,6 +94,13 @@ async function getAllBrands() {
     return result.results
 }
 
+async function getUserRepliesCount(userId) {
+    const postsQuery = api.get(endpoints.postsCount(userId));
+    const repliesQuery = api.get(endpoints.repliesCount(userId));
+    const [postsResponse, repliesResponse] = await Promise.all([postsQuery, repliesQuery]);
+    return postsResponse.count + repliesResponse.count;
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -105,5 +114,6 @@ export const dataService = {
     editReply,
     createNewCategory,
     archiveTopic,
-    getAllBrands
+    getAllBrands,
+    getUserRepliesCount
 };
