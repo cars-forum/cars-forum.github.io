@@ -14,7 +14,7 @@ const template = (data, userData, roles, brands, updateHandler) => {
 <section id="user-details">
     <h1>Profile Details</h1>
     <div class="user-info">
-        ${data.avatar === 'avatar.png' ? html`
+        ${data.avatar === 'avatar.png' || data.avatar === 'admin-avatar.png'  ? html`
             <img src="/static/img/${data.avatar}" alt="User Avatar" id="avatar-img">
         `: html`
             <img src="${data.avatar}" alt="User Avatar" id="avatar-img">

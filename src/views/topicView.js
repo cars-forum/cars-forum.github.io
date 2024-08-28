@@ -9,7 +9,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         const brandStyle = {width:"60px", height:"60px"};
         return html`
     <div class="user-details">
-        ${data.author.avatar === 'avatar.png' ? html`
+        ${data.author.avatar === 'avatar.png' || data.author.avatar === 'admin-avatar.png' ? html`
             <img src="/static/img/${data.author.avatar}" alt="User Avatar" id="avatar-img">
         `: html`
             <img src="${data.author.avatar}" alt="User Avatar" id="avatar-img">
