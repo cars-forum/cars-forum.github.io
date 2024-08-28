@@ -29,6 +29,11 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         ${userCardTemplate(item)}
         <div class="user-comment">
             <p>Replied at: ${new Date(item.createdAt).toLocaleString('uk-Uk')}</p>
+            ${item.videoUrl ? html`
+                <iframe width="560" height="315"
+                    src="${item.videoUrl}">
+                </iframe>
+            `:null}
             ${item.content.map(par => html`<p>${par}</p>`)}
             ${isAdmin ? html`
                 <a href="/edit-reply/${item.objectId}" class="button">Edit</a>
@@ -54,6 +59,11 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         ${userCardTemplate(data)}
         <div class="user-comment">
             <p>Published at: ${new Date(data.createdAt).toLocaleString('uk-Uk')}</p>
+            ${data.videoUrl ? html`
+            <iframe width="560" height="315"
+                src="${data.videoUrl}">
+            </iframe>
+            `:null}
             ${data.content.map(par => html`<p>${par}</p>`)}
             ${isAdmin ? html`
                 <a href="/edit-topic/${data.objectId}" class="button">Edit</a>

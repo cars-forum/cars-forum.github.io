@@ -2,7 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { dataService } from "../service/dataService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 
-const template = (categoryList, createHandler) => html`
+const template = (categoryList, roleForVideo, createHandler) => html`
 <section id="create-topic">
     <h1>Create a New Topic</h1>
     <form @submit=${createHandler}>
@@ -13,6 +13,12 @@ const template = (categoryList, createHandler) => html`
 
         <label for="title">Title</label>
         <input type="text" id="title" name="title">
+
+        ${roleForVideo ? html`
+            <label for="videoUrl">Video URL</label>
+            <input type="text" id="videoUrl" name="videoUrl">
+            <p class="explanation">(Here you can embed a youtube video.)</p>
+        `: null}
 
         <label for="content">Content</label>
         <textarea id="content" name="content" rows="10"></textarea>
@@ -28,10 +34,12 @@ const categoryTemplate = (item) => html`
 
 export async function showCreateTopicView(ctx) {
     const categoryList = await dataService.getAllCategories(true);
-    ctx.render(template(categoryList, submitHandler(onCreate)));
+    const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
+
+    ctx.render(template(categoryList, roleForVideo, submitHandler(onCreate)));
 
 
-    async function onCreate({ category, title, content }, form) {
+    async function onCreate({ category, title, videoUrl, content }, form) {
         const locker = new FormLocker(['category', 'title', 'content', 'submit']);
         locker.lockForm();
 
@@ -50,10 +58,18 @@ export async function showCreateTopicView(ctx) {
             return alert('Content must be at least 10 characters long.');
         }
 
+        if (videoUrl) {
+            const prefix = 'https://www.youtube.com/';
+            if (!videoUrl.startsWith(prefix)) {
+                return alert('Incorrect video URL!');
+            }
+            videoUrl = videoUrl.replace('watch?v=', 'embed/');
+        }
+
         const authorId = ctx.userUtils.getUserData()?.objectId;
 
         try {
-            const result = await dataService.createNewTopic(title, content, authorId, category);
+            const result = await dataService.createNewTopic(title, content, authorId, category, videoUrl);
             ctx.redirect('/topic/' + result.objectId);
 
         } catch (error) {

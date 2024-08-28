@@ -2,7 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { dataService } from "../service/dataService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 
-const template = (data, replyHandler) => html`
+const template = (data, roleForVideo, replyHandler) => html`
 <section id="reply-topic">
     <h1>Reply to</h1>
     <form @submit=${replyHandler}>
@@ -10,6 +10,12 @@ const template = (data, replyHandler) => html`
 
         <label for="title">Title</label>
         <input ?disabled=${true} type="text" id="title" name="title" .value=${data.title}>
+
+        ${roleForVideo ? html`
+            <label for="videoUrl">Video URL</label>
+            <input type="text" id="videoUrl" name="videoUrl">
+            <p class="explanation">(Here you can embed a youtube video.)</p>
+        `: null}
 
         <label for="content">Content</label>
         <textarea id="content" name="content" rows="10"></textarea>
@@ -22,10 +28,11 @@ const template = (data, replyHandler) => html`
 export async function showReplyView(ctx) {
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
+    const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
 
-    ctx.render(template(data, submitHandler(onReply)));
+    ctx.render(template(data, roleForVideo, submitHandler(onReply)));
 
-    async function onReply({ objectId, content }, form) {
+    async function onReply({ objectId, videoUrl, content }, form) {
         const locker = new FormLocker(['content', 'submit']);
         locker.lockForm();
 
@@ -36,8 +43,16 @@ export async function showReplyView(ctx) {
 
         const authorId = ctx.userUtils.getUserData()?.objectId;
 
+        if (videoUrl) {
+            const prefix = 'https://www.youtube.com/';
+            if (!videoUrl.startsWith(prefix)) {
+                return alert('Incorrect video URL!');
+            }
+            videoUrl = videoUrl.replace('watch?v=', 'embed/');
+        }
+
         try {
-            await dataService.addNewReply(content, authorId, objectId);
+            await dataService.addNewReply(content, authorId, objectId, videoUrl);
 
         } catch (error) {
             locker.unlockForm();

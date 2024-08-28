@@ -18,10 +18,10 @@ function getSessionToken() {
     return getUserData().sessionToken;
 }
 
-// function isOwner(ownerItemId) {
-//     const userId = getUserData()?._id;
-//     return userId === ownerItemId;
-// }
+function isOwner(replyAuthorId) {
+    const userId = getUserData()?.objectId;
+    return userId === replyAuthorId;
+}
 
 function isAdmin() {
     const roleId = getUserData()?.roleId;
@@ -43,7 +43,7 @@ export const user = {
     getUserData,
     clearUserData,
     getSessionToken,
-    // isOwner,
+    isOwner,
     isAdmin,
     isModerator,
     isTopUser,

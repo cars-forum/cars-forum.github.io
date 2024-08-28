@@ -35,7 +35,17 @@ async function getTopicDetails(topicId) {
     return await api.get(endpoints.topic(topicId));
 }
 
-async function createNewTopic(title, content, authorId, categoryId) {
+async function createNewTopic(title, content, authorId, categoryId, videoUrl) {
+    if(videoUrl){
+        return await api.post(endpoints.creatingPost, {
+            title,
+            content,
+            author: { "__type": "Pointer", "className": "_User", "objectId": authorId },
+            category: { "__type": "Pointer", "className": "Categories", "objectId": categoryId },
+            videoUrl
+        });
+    }
+
     return await api.post(endpoints.creatingPost, {
         title,
         content,
@@ -44,7 +54,16 @@ async function createNewTopic(title, content, authorId, categoryId) {
     });
 }
 
-async function addNewReply(content, authorId, postId) {
+async function addNewReply(content, authorId, postId, videoUrl) {
+    if(videoUrl){
+        return await api.post(endpoints.creatingReply, {
+            content,
+            "author": { "__type": "Pointer", "className": "_User", "objectId": authorId },
+            "post": { "__type": "Pointer", "className": "Posts", "objectId": postId },
+            videoUrl
+        });
+    }
+    
     return await api.post(endpoints.creatingReply, {
         content,
         "author": { "__type": "Pointer", "className": "_User", "objectId": authorId },

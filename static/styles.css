@@ -537,6 +537,12 @@ form button:hover {
     transition: 400ms;
 }
 
+.explanation {
+    font-size: 11px;
+    font-style: italic;
+    margin: 1px 0px 30px 0px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #topic .comment {
