@@ -3,10 +3,10 @@ import { styleMap } from '@lit/directives/style-map.js';
 import { dataService } from "../service/dataService.js";
 import { roleStyles } from "../utils/stylesUtils.js";
 
-const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
+const template = (data, replies, userData, isAdminOrMod, editPermisions, isArchived, handlers) => {
     const userCardTemplate = (data) => {
         const roleStyle = roleStyles[data["author"]["role"]["objectId"]];
-        const brandStyle = {width:"60px", height:"60px"};
+        const brandStyle = { width: "60px", height: "60px" };
         return html`
     <div class="user-details">
         ${data.author.avatar === 'avatar.png' || data.author.avatar === 'admin-avatar.png' ? html`
@@ -20,7 +20,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
         ${data.author.location ? html`
             <p>Location: <span id="location">${data.author.location}</span></p>
         `: null}
-        ${data.author.preferredManufacturer ? html`<p class="brand-label">Prefers:<br /> <img style=${styleMap(brandStyle)} src="${data.author.preferredManufacturer}"></p>`:null}
+        ${data.author.preferredManufacturer ? html`<p class="brand-label">Prefers:<br /> <img style=${styleMap(brandStyle)} src="${data.author.preferredManufacturer}"></p>` : null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.author.role.name}</span></p>
     `}
 
@@ -33,9 +33,9 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
                 <iframe width="560" height="315"
                     src="${item.videoUrl}">
                 </iframe>
-            `:null}
+            `: null}
             ${item.content.map(par => html`<p>${par}</p>`)}
-            ${isAdmin ? html`
+            ${editPermisions(item.author.objectId) && !data.isLocked ? html`
                 <a href="/edit-reply/${item.objectId}" class="button">Edit</a>
             `: null}
         </div>
@@ -44,7 +44,7 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
 
     return html`
     <section id="topic">
-    ${isAdmin && !isArchived  ? html`
+    ${isAdminOrMod && !isArchived ? html`
     <div class="admin-panel">
         ${data.isLocked ? html`
             <a @click=${handlers.unlockTopic} data-id="${data.objectId}" href="javascript:void(0)" class="button">Unlock</a>
@@ -63,9 +63,9 @@ const template = (data, replies, userData, isAdmin, isArchived, handlers) => {
             <iframe width="560" height="315"
                 src="${data.videoUrl}">
             </iframe>
-            `:null}
+            `: null}
             ${data.content.map(par => html`<p>${par}</p>`)}
-            ${isAdmin ? html`
+            ${editPermisions(data.author.objectId) && !data.isLocked ? html`
                 <a href="/edit-topic/${data.objectId}" class="button">Edit</a>
             `: null}
         </div>
@@ -99,7 +99,8 @@ export async function showTopicView(ctx) {
     }));
 
     const userData = ctx.userUtils.getUserData();
-    const isAdmin = ctx.userUtils.isAdmin();
+    const isAdminOrMod = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator();
+    const editPermisions = (replyId) => ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || (ctx.userUtils.isTopUser() && ctx.userUtils.isOwner(replyId));
     const isArchived = data.category.objectId === "IHKYWUnBbb";
     const handlers = {
         lockTopic,
@@ -107,7 +108,7 @@ export async function showTopicView(ctx) {
         archiveTopic
     };
 
-    ctx.render(template(data, replies, userData, isAdmin, isArchived, handlers));
+    ctx.render(template(data, replies, userData, isAdminOrMod, editPermisions, isArchived, handlers));
 
     async function lockTopic(e) {
         const confirmation = confirm('Do you want to lock this topic?');
@@ -120,7 +121,7 @@ export async function showTopicView(ctx) {
         const postId = currentTarget.getAttribute('data-id');
         try {
             await dataService.changeTopicLockingState(postId, true);
-            
+
         } catch (error) {
             return;
         }
@@ -138,7 +139,7 @@ export async function showTopicView(ctx) {
         const postId = currentTarget.getAttribute('data-id');
         try {
             await dataService.changeTopicLockingState(postId, false);
-            
+
         } catch (error) {
             return;
         }
@@ -157,7 +158,7 @@ export async function showTopicView(ctx) {
 
         try {
             await dataService.archiveTopic(postId);
-            
+
         } catch (error) {
             return;
         }
