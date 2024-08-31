@@ -14,7 +14,8 @@ const endpoints = {
     changeReply: (replyId) => `/classes/Replies/${replyId}`,
     allBrands: '/classes/Brands',
     postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
-    repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`
+    repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
+    ban: 'classes/Bans'
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -120,6 +121,19 @@ async function getUserRepliesCount(userId) {
     return postsResponse.count + repliesResponse.count;
 }
 
+async function banUser(userId, expiresOn, reason) {
+    const data = { 
+        expiresOn,
+        user: {__type: 'Pointer', className: '_User', objectId: userId}
+    };
+
+    if(reason){
+        data.reason = reason;
+    }
+
+    return await api.post(endpoints.ban, data);
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -134,5 +148,6 @@ export const dataService = {
     createNewCategory,
     archiveTopic,
     getAllBrands,
-    getUserRepliesCount
+    getUserRepliesCount,
+    banUser
 };

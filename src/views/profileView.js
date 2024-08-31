@@ -43,9 +43,10 @@ const template = (data, userData, roles, brands, updateHandler, banHandler) => {
         <form id="ban-form" @submit=${banHandler} style="display:none">
             <div class="ban-user">
                 <h2>Ban User</h2>
-                <label for="expiresOn">Expires On</label>
+                <label for="expiresOn">Expires At</label>
                 <input type="datetime-local" id="expiresOn" name="expiresOn">
                 <input type="text" id="reason" name="reason">
+                <label for="reason">Reason</label>
                 <button id="banSubmit" type="submit" class="update-button">Update</button>
             </div>
         </form>
@@ -71,7 +72,7 @@ export async function showProfileView(ctx) {
         brands = await dataService.getAllBrands();
     }
 
-    ctx.render(template(data, userData, roles, brands, submitHandler(onUpdate)));
+    ctx.render(template(data, userData, roles, brands, submitHandler(onUpdate), submitHandler(onBan)));
 
     async function onUpdate({ "avatar-url": avatar, location, "preferred-manufacturer": preferredManufacturer, role }) {
         const locker = new FormLocker(['avatar-url',
@@ -111,6 +112,34 @@ export async function showProfileView(ctx) {
         }
         locker.unlockForm();
         ctx.redirect('/profile/' + userId);
+    }
+
+    async function onBan({ expiresOn, reason }) {
+        if (!expiresOn) {
+            return alert('Please, pick a date!');
+        }
+
+        expiresOn = new Date(expiresOn);
+
+        const today = new Date();
+
+        if (today >= expiresOn) {
+            return alert("You can't choose dates in the past.");
+        }
+
+        const bansReportsTopicId = 'ra3dDlNpkj';
+        const modId = userData.objectId;
+        const username = data.username;
+        const message = `${username} has been banned from the forum. The ban expires at ${expiresOn.toLocaleString('uk-Uk')}.\nReason:${reason}`;
+        debugger;
+        try {
+            await dataService.banUser(userId, expiresOn, reason);
+            await dataService.addNewReply(message, modId, bansReportsTopicId);
+        } catch (error) {
+            return;
+        }
+
+        ctx.redirect('/topic/' + bansReportsTopicId);
     }
 }
 
