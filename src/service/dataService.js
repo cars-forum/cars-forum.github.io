@@ -15,7 +15,8 @@ const endpoints = {
     allBrands: '/classes/Brands',
     postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
     repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
-    ban: '/classes/Bans'
+    ban: '/classes/Bans',
+    banChecker: (userId)=> `/classes/Bans?where={"user":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&order=-expiresOn&limit=1`
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -138,6 +139,18 @@ async function banUser(userId, expiresOn, reason) {
     return await api.post(endpoints.ban, data);
 }
 
+async function isActiveBan(userId) {
+    const result = await api.get(endpoints.banChecker(userId));
+
+    if(!result.results.length){
+        return false;
+    }
+
+    const expDate = new Date(result.results[0].expiresOn.iso)
+    const now = new Date();
+    return expDate > now;
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -153,5 +166,6 @@ export const dataService = {
     archiveTopic,
     getAllBrands,
     getUserRepliesCount,
-    banUser
+    banUser,
+    isActiveBan
 };
