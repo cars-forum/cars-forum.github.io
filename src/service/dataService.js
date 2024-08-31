@@ -15,7 +15,7 @@ const endpoints = {
     allBrands: '/classes/Brands',
     postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
     repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
-    ban: 'classes/Bans'
+    ban: '/classes/Bans'
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -122,8 +122,12 @@ async function getUserRepliesCount(userId) {
 }
 
 async function banUser(userId, expiresOn, reason) {
+    const isoDate = expiresOn.toISOString();
     const data = { 
-        expiresOn,
+        expiresOn: {
+            '__type': 'Date',
+            'iso': isoDate
+        },
         user: {__type: 'Pointer', className: '_User', objectId: userId}
     };
 

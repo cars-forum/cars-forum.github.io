@@ -130,7 +130,7 @@ export async function showProfileView(ctx) {
         const bansReportsTopicId = 'ra3dDlNpkj';
         const modId = userData.objectId;
         const username = data.username;
-        const message = `${username} has been banned from the forum. The ban expires at ${expiresOn.toLocaleString('uk-Uk')}.\nReason:${reason}`;
+        const message = `${username} has been banned from the forum. The ban expires at ${expiresOn.toLocaleString('uk-Uk')}.\nReason: ${reason}`;
         debugger;
         try {
             await dataService.banUser(userId, expiresOn, reason);
