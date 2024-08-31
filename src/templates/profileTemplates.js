@@ -46,13 +46,6 @@ const formTopUser = (data, brands) => html`
 `
 const formModerator = (data, brands) => html`
         ${formTopUser(data, brands)}
-
-        <!-- Ban Until Date and Time Picker -->
-        <div class="ban-until">
-            <label for="ban-until">Ban Until</label>
-            <input disabled type="datetime-local" id="ban-until" name="ban-until">
-            <input type="checkbox" id="ban-checkbox" name="ban-checkbox">
-        </div>
 `
 const formAdmin = (data, brands) => html`
         ${formModerator(data, brands)}

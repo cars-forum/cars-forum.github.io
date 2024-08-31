@@ -6,7 +6,7 @@ import { profileFormTemplates } from '../templates/profileTemplates.js';
 import { dataService } from '../service/dataService.js';
 import { FormLocker, submitHandler } from '../utils/submitUtil.js';
 
-const template = (data, userData, roles, brands, updateHandler) => {
+const template = (data, userData, roles, brands, updateHandler, banHandler) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
     const brandStyle = { width: "60px", height: "60px" };
     const isOwner = data.objectId === userData?.objectId;
@@ -14,7 +14,7 @@ const template = (data, userData, roles, brands, updateHandler) => {
 <section id="user-details">
     <h1>Profile Details</h1>
     <div class="user-info">
-        ${data.avatar === 'avatar.png' || data.avatar === 'admin-avatar.png'  ? html`
+        ${data.avatar === 'avatar.png' || data.avatar === 'admin-avatar.png' ? html`
             <img src="/static/img/${data.avatar}" alt="User Avatar" id="avatar-img">
         `: html`
             <img src="${data.avatar}" alt="User Avatar" id="avatar-img">
@@ -36,6 +36,20 @@ const template = (data, userData, roles, brands, updateHandler) => {
             <button id="submit" type="submit" class="update-button">Update</button>
         </form>
     ` : null}
+
+    
+    ${roles.isAdmin || roles.isModerator ? html`
+        <label for="ban-section"><input @change=${showAndHideBanMenu} type="checkbox" id="ban-section" name="ban-section">Show Ban Manu</label>
+        <form id="ban-form" @submit=${banHandler} style="display:none">
+            <div class="ban-user">
+                <h2>Ban User</h2>
+                <label for="expiresOn">Expires On</label>
+                <input type="datetime-local" id="expiresOn" name="expiresOn">
+                <input type="text" id="reason" name="reason">
+                <button id="banSubmit" type="submit" class="update-button">Update</button>
+            </div>
+        </form>
+    `: null}
     
 </section>
 `}
@@ -98,4 +112,15 @@ export async function showProfileView(ctx) {
         locker.unlockForm();
         ctx.redirect('/profile/' + userId);
     }
+}
+
+function showAndHideBanMenu(e) {
+    const banForm = document.getElementById('ban-form');
+
+    if (e.currentTarget.checked) {
+        banForm.style.display = 'block';
+        return;
+    }
+
+    banForm.style.display = 'none';
 }

@@ -543,6 +543,10 @@ form button:hover {
     margin: 1px 0px 30px 0px;
 }
 
+#ban-section {
+    margin: 50px 10px 10px 0px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #topic .comment {
