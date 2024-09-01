@@ -26,6 +26,14 @@ const template = (data, roleForVideo, replyHandler) => html`
 `
 
 export async function showReplyView(ctx) {
+    const userId = ctx.userUtils.getUserData()?.objectId;
+    const isBanned = await dataService.isActiveBan(userId);
+
+    if(isBanned){
+        ctx.redirect('/ban-message');
+        return;
+    }
+
     const id = ctx.params.id;
     const data = await dataService.getTopicDetails(id);
     const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();

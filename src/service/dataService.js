@@ -151,6 +151,11 @@ async function isActiveBan(userId) {
     return expDate > now;
 }
 
+async function getBanInfo(userId){
+    const result = await api.get(endpoints.banChecker(userId));
+    return result.results[0];
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -167,5 +172,6 @@ export const dataService = {
     getAllBrands,
     getUserRepliesCount,
     banUser,
-    isActiveBan
+    isActiveBan,
+    getBanInfo
 };

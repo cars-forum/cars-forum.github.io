@@ -33,6 +33,14 @@ const categoryTemplate = (item) => html`
 `
 
 export async function showCreateTopicView(ctx) {
+    const userId = ctx.userUtils.getUserData()?.objectId;
+    const isBanned = await dataService.isActiveBan(userId);
+
+    if(isBanned){
+        ctx.redirect('/ban-message');
+        return;
+    }
+
     const categoryList = await dataService.getAllCategories(true);
     const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
 

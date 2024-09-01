@@ -15,6 +15,7 @@ import { showEditTopicView } from './views/editTopicView.js';
 import { showEditReplyView } from './views/editReplyView.js';
 import { showCreateCategoryView } from './views/createCategoryView.js';
 import { showProfileView } from './views/profileView.js';
+import { showBanMessageView } from './views/banMessageView.js';
 
 const root = document.querySelector('main');
 
@@ -36,6 +37,7 @@ page('/edit-topic/:id', showEditTopicView);
 page('/edit-reply/:id', showEditReplyView);
 page('/create-category', showCreateCategoryView);
 page('/profile/:id', showProfileView);
+page('/ban-message', showBanMessageView);
 
 page.start();
 
