@@ -547,6 +547,10 @@ form button:hover {
     margin: 50px 10px 10px 0px;
 }
 
+.hidden{
+    display: "none";
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #topic .comment {

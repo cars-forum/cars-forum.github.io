@@ -6,7 +6,7 @@ import { profileFormTemplates } from '../templates/profileTemplates.js';
 import { dataService } from '../service/dataService.js';
 import { FormLocker, submitHandler } from '../utils/submitUtil.js';
 
-const template = (data, userData, roles, brands, updateHandler, banHandler) => {
+const template = (data, userData, roles, brands, isBanned, updateHandler, banHandler) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
     const brandStyle = { width: "60px", height: "60px" };
     const isOwner = data.objectId === userData?.objectId;
@@ -29,13 +29,16 @@ const template = (data, userData, roles, brands, updateHandler, banHandler) => {
         ${data.preferredManufacturer ? html`<p>Prefers: <br /> <img style=${styleMap(brandStyle)} src="${data.preferredManufacturer}"></p>` : null}
         <p><span style=${styleMap(roleStyle)} id="role-info">${data.role.name}</span></p>
     </div>
+    ${!isBanned ? html`
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
-        <form @submit=${updateHandler}>
-            ${profileFormTemplates[userData.roleId](data, brands)}
-            <br />
-            <button id="submit" type="submit" class="update-button">Update</button>
-        </form>
-    ` : null}
+            <form @submit=${updateHandler}>
+                ${profileFormTemplates[userData.roleId](data, brands)}
+                <br />
+                <button id="submit" type="submit" class="update-button">Update</button>
+            </form>
+        ` : null}
+
+    `: null}
 
     
     ${roles.isAdmin || roles.isModerator ? html`
@@ -61,6 +64,7 @@ export async function showProfileView(ctx) {
     const repliesCount = await dataService.getUserRepliesCount(data.objectId);
     data.repliesCount = repliesCount;
     const userData = ctx.userUtils.getUserData();
+
     const roles = {
         isAdmin: ctx.userUtils.isAdmin(),
         isModerator: ctx.userUtils.isModerator(),
@@ -72,15 +76,17 @@ export async function showProfileView(ctx) {
         brands = await dataService.getAllBrands();
     }
 
-    ctx.render(template(data, userData, roles, brands, submitHandler(onUpdate), submitHandler(onBan)));
+    const isBanned = await dataService.isActiveBan(userId) && userData.objectId === userId;
+
+    ctx.render(template(data, userData, roles, brands, isBanned, submitHandler(onUpdate), submitHandler(onBan)));
+    const locker = new FormLocker(['avatar-url',
+        'location',
+        'preferred-manufacturer',
+        'ban-until',
+        'role',
+        'submit']);
 
     async function onUpdate({ "avatar-url": avatar, location, "preferred-manufacturer": preferredManufacturer, role }) {
-        const locker = new FormLocker(['avatar-url',
-            'location',
-            'preferred-manufacturer',
-            'ban-until',
-            'role',
-            'submit']);
         locker.lockForm();
         const updateData = {};
 
@@ -115,7 +121,10 @@ export async function showProfileView(ctx) {
     }
 
     async function onBan({ expiresOn, reason }) {
+        locker.lockForm();
+
         if (!expiresOn) {
+            locker.unlockForm();
             return alert('Please, pick a date!');
         }
 
@@ -124,6 +133,7 @@ export async function showProfileView(ctx) {
         const today = new Date();
 
         if (today >= expiresOn) {
+            locker.unlockForm();
             return alert("You can't choose dates in the past.");
         }
 
@@ -131,11 +141,12 @@ export async function showProfileView(ctx) {
         const modId = userData.objectId;
         const username = data.username;
         const message = `${username} has been banned from the forum. The ban expires at ${expiresOn.toLocaleString('uk-Uk')}.\nReason: ${reason}`;
-        debugger;
+
         try {
             await dataService.banUser(userId, expiresOn, reason);
             await dataService.addNewReply(message, modId, bansReportsTopicId);
         } catch (error) {
+            locker.unlockForm();
             return;
         }
 
