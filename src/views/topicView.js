@@ -3,7 +3,7 @@ import { styleMap } from '@lit/directives/style-map.js';
 import { dataService } from "../service/dataService.js";
 import { roleStyles } from "../utils/stylesUtils.js";
 
-const template = (data, replies, userData, isAdminOrMod, editPermisions, isArchived, handlers) => {
+const template = (data, replies, userData, isAdminOrMod, editPermisions, deletePermisions, isArchived, handlers) => {
     const userCardTemplate = (data) => {
         const roleStyle = roleStyles[data["author"]["role"]["objectId"]];
         const brandStyle = { width: "60px", height: "60px" };
@@ -37,6 +37,9 @@ const template = (data, replies, userData, isAdminOrMod, editPermisions, isArchi
             ${item.content.map(par => html`<p>${par}</p>`)}
             ${editPermisions(item.author.objectId) && !data.isLocked ? html`
                 <a href="/edit-reply/${item.objectId}" class="button">Edit</a>
+            `: null}
+            ${deletePermisions ? html`
+            <a href="javascript:void(0)" data-id="${item.objectId}" class="button">Delete</a>
             `: null}
         </div>
     </div>
@@ -101,6 +104,7 @@ export async function showTopicView(ctx) {
     const userData = ctx.userUtils.getUserData();
     const isAdminOrMod = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator();
     const editPermisions = (replyId) => ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || (ctx.userUtils.isTopUser() && ctx.userUtils.isOwner(replyId));
+    const deletePermisions = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator();
     const isArchived = data.category.objectId === "IHKYWUnBbb";
     const handlers = {
         lockTopic,
@@ -108,7 +112,7 @@ export async function showTopicView(ctx) {
         archiveTopic
     };
 
-    ctx.render(template(data, replies, userData, isAdminOrMod, editPermisions, isArchived, handlers));
+    ctx.render(template(data, replies, userData, isAdminOrMod, editPermisions, deletePermisions, isArchived, handlers));
 
     async function lockTopic(e) {
         const confirmation = confirm('Do you want to lock this topic?');
