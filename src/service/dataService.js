@@ -16,7 +16,7 @@ const endpoints = {
     postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
     repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
     ban: '/classes/Bans',
-    banChecker: (userId)=> `/classes/Bans?where={"user":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&order=-expiresOn&limit=1`
+    banChecker: (userId) => `/classes/Bans?where={"user":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&order=-expiresOn&limit=1`
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -38,7 +38,7 @@ async function getTopicDetails(topicId) {
 }
 
 async function createNewTopic(title, content, authorId, categoryId, videoUrl) {
-    if(videoUrl){
+    if (videoUrl) {
         return await api.post(endpoints.creatingPost, {
             title,
             content,
@@ -57,7 +57,7 @@ async function createNewTopic(title, content, authorId, categoryId, videoUrl) {
 }
 
 async function addNewReply(content, authorId, postId, videoUrl) {
-    if(videoUrl){
+    if (videoUrl) {
         return await api.post(endpoints.creatingReply, {
             content,
             "author": { "__type": "Pointer", "className": "_User", "objectId": authorId },
@@ -65,7 +65,7 @@ async function addNewReply(content, authorId, postId, videoUrl) {
             videoUrl
         });
     }
-    
+
     return await api.post(endpoints.creatingReply, {
         content,
         "author": { "__type": "Pointer", "className": "_User", "objectId": authorId },
@@ -124,15 +124,15 @@ async function getUserRepliesCount(userId) {
 
 async function banUser(userId, expiresOn, reason) {
     const isoDate = expiresOn.toISOString();
-    const data = { 
+    const data = {
         expiresOn: {
             '__type': 'Date',
             'iso': isoDate
         },
-        user: {__type: 'Pointer', className: '_User', objectId: userId}
+        user: { __type: 'Pointer', className: '_User', objectId: userId }
     };
 
-    if(reason){
+    if (reason) {
         data.reason = reason;
     }
 
@@ -142,7 +142,7 @@ async function banUser(userId, expiresOn, reason) {
 async function isActiveBan(userId) {
     const result = await api.get(endpoints.banChecker(userId));
 
-    if(!result.results.length){
+    if (!result.results.length) {
         return false;
     }
 
@@ -151,7 +151,7 @@ async function isActiveBan(userId) {
     return expDate > now;
 }
 
-async function getBanInfo(userId){
+async function getBanInfo(userId) {
     const result = await api.get(endpoints.banChecker(userId));
     return result.results[0];
 }
@@ -179,4 +179,31 @@ export const dataService = {
     isActiveBan,
     getBanInfo,
     deleteReply
+};
+
+const topicService = {
+    getTopics,
+    getTopicDetails,
+    createNewTopic,
+    changeTopicLockingState,
+    editTopic,
+    archiveTopic
+};
+
+const categoryService = {
+    getAllCategories,
+    createNewCategory
+};
+
+const replyService = {
+    addNewReply,
+    getAllReplies,
+    getReplyDetails,
+    editReply,
+    deleteReply
+};
+
+const commonDataService = {
+    getAllBrands,
+    getUserRepliesCount
 };
