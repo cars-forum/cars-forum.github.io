@@ -156,6 +156,10 @@ async function getBanInfo(userId){
     return result.results[0];
 }
 
+async function deleteReply(replyId) {
+    return await api.del(endpoints.changeReply(replyId));
+}
+
 export const dataService = {
     getAllCategories,
     getTopics,
@@ -173,5 +177,6 @@ export const dataService = {
     getUserRepliesCount,
     banUser,
     isActiveBan,
-    getBanInfo
+    getBanInfo,
+    deleteReply
 };

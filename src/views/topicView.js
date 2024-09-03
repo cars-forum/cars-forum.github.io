@@ -39,7 +39,7 @@ const template = (data, replies, userData, isAdminOrMod, editPermisions, deleteP
                 <a href="/edit-reply/${item.objectId}" class="button">Edit</a>
             `: null}
             ${deletePermisions ? html`
-            <a href="javascript:void(0)" data-id="${item.objectId}" class="button">Delete</a>
+            <a @click=${handlers.deleteReply} href="javascript:void(0)" data-id="${item.objectId}" class="button">Delete</a>
             `: null}
         </div>
     </div>
@@ -109,7 +109,8 @@ export async function showTopicView(ctx) {
     const handlers = {
         lockTopic,
         unlockTopic,
-        archiveTopic
+        archiveTopic,
+        deleteReply
     };
 
     ctx.render(template(data, replies, userData, isAdminOrMod, editPermisions, deletePermisions, isArchived, handlers));
@@ -168,5 +169,24 @@ export async function showTopicView(ctx) {
         }
 
         ctx.redirect('/');
+    }
+
+    async function deleteReply(e) {
+        const confirmation = confirm('Are you sure you want to remove this comment?');
+
+        if(!confirmation){
+            return;
+        }
+        
+        const replyId = e.currentTarget.getAttribute('data-id');
+
+        try {
+            await dataService.deleteReply(replyId);
+
+        } catch (error) {
+            return;
+        }
+
+        ctx.redirect('/topic/' + id);
     }
 }
