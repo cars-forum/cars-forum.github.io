@@ -1,5 +1,5 @@
 import { html } from "@lit/lit-html.js";
-import { dataService } from "../service/dataService.js";
+import { topicService, categoryService } from "../service/dataService.js";
 
 const template = (categories, userData, isAdmin) => html`
 <section id="home">
@@ -28,10 +28,10 @@ const topicTemplate = (item) => html`
 `
 
 export async function showHomeView(ctx) {
-    const categories = await dataService.getAllCategories();
+    const categories = await categoryService.getAllCategories();
     
     const categoriesWithTopics = await Promise.all(categories.map(async (category) => {
-        const topics = await dataService.getTopics(category.objectId);
+        const topics = await topicService.getTopics(category.objectId);
         return { ...category, topics };
     }));
 

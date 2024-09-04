@@ -1,22 +1,27 @@
 import { api } from "./api.js";
 
 const endpoints = {
+    // Topic endpoints
     topicsOfCategory: (categoryId) => `/classes/Posts/?include=author&where={"category":{"__type":"Pointer","className":"Categories","objectId":"${categoryId}"}}`,
+    topic: (topicId) => `/classes/Posts/${topicId}?include=author,author.role`,
+    changeTopic: (postId) => `/classes/Posts/${postId}`,
+    creatingPost: '/classes/Posts',
+    postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
+
+    // Category endpoints
     categories: '/classes/Categories/?order=isLast,createdAt',
     categoriesNoLast: '/classes/Categories/?where={"isLast":false}&order=createdAt',
-    topic: (topicId) => `/classes/Posts/${topicId}?include=author,author.role`,
-    creatingPost: '/classes/Posts',
-    creatingReply: '/classes/Replies',
     creatingCategory: '/classes/Categories',
+
+    // Reply endpoints
+    creatingReply: '/classes/Replies',
     allRepliesOfPost: (postId) => `/classes/Replies?where={"post":{"__type":"Pointer","className":"Posts","objectId":"${postId}"}}&include=author,author.role`,
-    changeTopic: (postId) => `/classes/Posts/${postId}`,
     reply: (replyId) => `/classes/Replies/${replyId}?include=post`,
     changeReply: (replyId) => `/classes/Replies/${replyId}`,
-    allBrands: '/classes/Brands',
-    postsCount: (userId) => `/classes/Posts?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
     repliesCount: (userId) => `/classes/Replies?where={"author":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&count=1&limit=0`,
-    ban: '/classes/Bans',
-    banChecker: (userId) => `/classes/Bans?where={"user":{"__type":"Pointer","className":"_User","objectId":"${userId}"}}&order=-expiresOn&limit=1`
+
+    // Others
+    allBrands: '/classes/Brands',
 }
 
 async function getAllCategories(withoutLast = false) {
@@ -122,64 +127,27 @@ async function getUserRepliesCount(userId) {
     return postsResponse.count + repliesResponse.count;
 }
 
-async function banUser(userId, expiresOn, reason) {
-    const isoDate = expiresOn.toISOString();
-    const data = {
-        expiresOn: {
-            '__type': 'Date',
-            'iso': isoDate
-        },
-        user: { __type: 'Pointer', className: '_User', objectId: userId }
-    };
-
-    if (reason) {
-        data.reason = reason;
-    }
-
-    return await api.post(endpoints.ban, data);
-}
-
-async function isActiveBan(userId) {
-    const result = await api.get(endpoints.banChecker(userId));
-
-    if (!result.results.length) {
-        return false;
-    }
-
-    const expDate = new Date(result.results[0].expiresOn.iso)
-    const now = new Date();
-    return expDate > now;
-}
-
-async function getBanInfo(userId) {
-    const result = await api.get(endpoints.banChecker(userId));
-    return result.results[0];
-}
-
 async function deleteReply(replyId) {
     return await api.del(endpoints.changeReply(replyId));
 }
 
-export const dataService = {
-    getAllCategories,
-    getTopics,
-    getTopicDetails,
-    createNewTopic,
-    addNewReply,
-    getAllReplies,
-    changeTopicLockingState,
-    editTopic,
-    getReplyDetails,
-    editReply,
-    createNewCategory,
-    archiveTopic,
-    getAllBrands,
-    getUserRepliesCount,
-    banUser,
-    isActiveBan,
-    getBanInfo,
-    deleteReply
-};
+// export const dataService = {
+//     getAllCategories,
+//     getTopics,
+//     getTopicDetails,
+//     createNewTopic,
+//     addNewReply,
+//     getAllReplies,
+//     changeTopicLockingState,
+//     editTopic,
+//     getReplyDetails,
+//     editReply,
+//     createNewCategory,
+//     archiveTopic,
+//     getAllBrands,
+//     getUserRepliesCount,
+//     deleteReply
+// };
 
 const topicService = {
     getTopics,
@@ -207,3 +175,10 @@ const commonDataService = {
     getAllBrands,
     getUserRepliesCount
 };
+
+export {
+    topicService,
+    categoryService,
+    replyService,
+    commonDataService
+}

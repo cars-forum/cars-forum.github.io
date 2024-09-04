@@ -1,6 +1,6 @@
 import { html, render } from '@lit/lit-html.js';
 import { user } from '../utils/userUtils.js';
-import { userService } from '../service/userService.js';
+import { signInService } from '../service/userService.js';
 import page from '@page/page.mjs';
 
 export function addNavControl() {
@@ -33,7 +33,7 @@ export function updateNav() {
 
 async function onLogout() {
     try {
-        await userService.logout();
+        await signInService.logout();
 
     } catch (error) {
         return;

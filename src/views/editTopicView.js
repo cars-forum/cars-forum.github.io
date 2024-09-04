@@ -1,5 +1,5 @@
 import { html } from "@lit/lit-html.js";
-import { dataService } from "../service/dataService.js";
+import { topicService, categoryService } from "../service/dataService.js";
 import { submitHandler, FormLocker } from "../utils/submitUtil.js";
 
 const template = (data, categoryList, editHandler) => html`
@@ -28,8 +28,8 @@ const categoryTemplate = (item) => html`
 
 export async function showEditTopicView(ctx) {
     const id = ctx.params.id;
-    const data = await dataService.getTopicDetails(id);
-    const categoryList = await dataService.getAllCategories();
+    const data = await topicService.getTopicDetails(id);
+    const categoryList = await categoryService.getAllCategories();
     selectCurrentCategory(data, categoryList);
 
     ctx.render(template(data, categoryList, submitHandler(onEdit)));
@@ -59,7 +59,7 @@ export async function showEditTopicView(ctx) {
         content += editInfo;
 
         try {
-            await dataService.editTopic(id, categoryId, title, content);
+            await topicService.editTopic(id, categoryId, title, content);
 
         } catch (error) {
             locker.unlockForm();

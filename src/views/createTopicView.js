@@ -1,5 +1,6 @@
 import { html } from "@lit/lit-html.js";
-import { dataService } from "../service/dataService.js";
+import { topicService, categoryService } from "../service/dataService.js";
+import { banService } from "../service/userService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 
 const template = (categoryList, roleForVideo, createHandler) => html`
@@ -34,14 +35,14 @@ const categoryTemplate = (item) => html`
 
 export async function showCreateTopicView(ctx) {
     const userId = ctx.userUtils.getUserData()?.objectId;
-    const isBanned = await dataService.isActiveBan(userId);
+    const isBanned = await banService.isActiveBan(userId);
 
     if(isBanned){
         ctx.redirect('/ban-message');
         return;
     }
 
-    const categoryList = await dataService.getAllCategories(true);
+    const categoryList = await categoryService.getAllCategories(true);
     const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
 
     ctx.render(template(categoryList, roleForVideo, submitHandler(onCreate)));
@@ -77,7 +78,7 @@ export async function showCreateTopicView(ctx) {
         const authorId = ctx.userUtils.getUserData()?.objectId;
 
         try {
-            const result = await dataService.createNewTopic(title, content, authorId, category, videoUrl);
+            const result = await topicService.createNewTopic(title, content, authorId, category, videoUrl);
             ctx.redirect('/topic/' + result.objectId);
 
         } catch (error) {

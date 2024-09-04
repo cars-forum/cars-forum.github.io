@@ -1,5 +1,5 @@
 import { html } from "@lit/lit-html.js";
-import { dataService } from "../service/dataService.js";
+import { replyService } from "../service/dataService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 
 const template = (data, editHandler) => html`
@@ -19,7 +19,7 @@ const template = (data, editHandler) => html`
 
 export async function showEditReplyView(ctx) {
     const id = ctx.params.id;
-    const data = await dataService.getReplyDetails(id);
+    const data = await replyService.getReplyDetails(id);
     const postId = data.post.objectId;
 
     ctx.render(template(data, submitHandler(onEdit)));
@@ -39,7 +39,7 @@ export async function showEditReplyView(ctx) {
         content += editInfo;
 
         try {
-            await dataService.editReply(id, content);
+            await replyService.editReply(id, content);
 
         } catch (error) {
             locker.unlockForm();

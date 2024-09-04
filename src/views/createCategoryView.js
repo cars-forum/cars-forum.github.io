@@ -1,6 +1,6 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
-import { dataService } from "../service/dataService.js";
+import { categoryService } from "../service/dataService.js";
 
 const template = (createHandler) => html`
 <section id="create-category">
@@ -26,7 +26,7 @@ export function showCreateCategoryView(ctx) {
         }
 
         try {
-            await dataService.createNewCategory(title);
+            await categoryService.createNewCategory(title);
 
         } catch (error) {
             locker.unlockForm();

@@ -1,6 +1,6 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
-import { userService } from "../service/userService.js";
+import { signInService } from "../service/userService.js";
 
 const template = (loginHandler) => html`
 <section id="login">
@@ -27,7 +27,7 @@ export function showLoginView(ctx) {
         }
 
         try {
-            await userService.login(username, password);
+            await signInService.login(username, password);
 
         } catch (error) {
             locker.unlockForm();

@@ -1,9 +1,9 @@
 import { html } from '@lit/lit-html.js';
 import { styleMap } from '@lit/directives/style-map.js';
-import { roleService, userService } from '../service/userService.js';
+import { roleService, userService, banService } from '../service/userService.js';
 import { roleStyles } from '../utils/stylesUtils.js';
 import { profileFormTemplates } from '../templates/profileTemplates.js';
-import { dataService } from '../service/dataService.js';
+import { replyService, commonDataService } from '../service/dataService.js';
 import { FormLocker, submitHandler } from '../utils/submitUtil.js';
 
 const template = (data, userData, roles, brands, isBanned, updateHandler, banHandler) => {
@@ -61,7 +61,7 @@ const template = (data, userData, roles, brands, isBanned, updateHandler, banHan
 export async function showProfileView(ctx) {
     const userId = ctx.params.id;
     const data = await userService.getUserInfo(userId);
-    const repliesCount = await dataService.getUserRepliesCount(data.objectId);
+    const repliesCount = await commonDataService.getUserRepliesCount(data.objectId);
     data.repliesCount = repliesCount;
     const userData = ctx.userUtils.getUserData();
 
@@ -73,10 +73,10 @@ export async function showProfileView(ctx) {
 
     let brands = null;
     if (Object.values(roles).some(val => val === true)) {
-        brands = await dataService.getAllBrands();
+        brands = await commonDataService.getAllBrands();
     }
 
-    const isBanned = await dataService.isActiveBan(userId) && userData.objectId === userId;
+    const isBanned = await banService.isActiveBan(userId) && userData.objectId === userId;
 
     ctx.render(template(data, userData, roles, brands, isBanned, submitHandler(onUpdate), submitHandler(onBan)));
     const locker = new FormLocker(['avatar-url',
@@ -143,8 +143,8 @@ export async function showProfileView(ctx) {
         const message = `${username} has been banned from the forum. The ban expires at ${expiresOn.toLocaleString('uk-Uk')}.\nReason: ${reason}`;
 
         try {
-            await dataService.banUser(userId, expiresOn, reason);
-            await dataService.addNewReply(message, modId, bansReportsTopicId);
+            await banService.banUser(userId, expiresOn, reason);
+            await replyService.addNewReply(message, modId, bansReportsTopicId);
         } catch (error) {
             locker.unlockForm();
             return;

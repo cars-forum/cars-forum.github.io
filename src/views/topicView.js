@@ -1,6 +1,6 @@
 import { html } from "@lit/lit-html.js";
 import { styleMap } from '@lit/directives/style-map.js';
-import { dataService } from "../service/dataService.js";
+import { topicService, replyService, commonDataService } from "../service/dataService.js";
 import { roleStyles } from "../utils/stylesUtils.js";
 
 const template = (data, replies, userData, isAdminOrMod, editPermisions, deletePermisions, isArchived, handlers) => {
@@ -85,17 +85,17 @@ const template = (data, replies, userData, isAdminOrMod, editPermisions, deleteP
 
 export async function showTopicView(ctx) {
     const id = ctx.params.id;
-    const data = await dataService.getTopicDetails(id);
-    const repliesCount = await dataService.getUserRepliesCount(data.author.objectId);
+    const data = await topicService.getTopicDetails(id);
+    const repliesCount = await commonDataService.getUserRepliesCount(data.author.objectId);
     data.author.repliesCount = repliesCount;
-    let replies = await dataService.getAllReplies(id);
+    let replies = await replyService.getAllReplies(id);
     data.content = data.content.split('\n');
 
     replies = await Promise.all(replies.map(async rep => {
         const result = { ...rep }
         result.content = rep.content.split('\n');
 
-        const comRepliesCount = await dataService.getUserRepliesCount(rep.author.objectId);
+        const comRepliesCount = await commonDataService.getUserRepliesCount(rep.author.objectId);
         result.author.repliesCount = comRepliesCount;
 
         return result;
@@ -125,7 +125,7 @@ export async function showTopicView(ctx) {
         const currentTarget = e.currentTarget;
         const postId = currentTarget.getAttribute('data-id');
         try {
-            await dataService.changeTopicLockingState(postId, true);
+            await topicService.changeTopicLockingState(postId, true);
 
         } catch (error) {
             return;
@@ -143,7 +143,7 @@ export async function showTopicView(ctx) {
         const currentTarget = e.currentTarget;
         const postId = currentTarget.getAttribute('data-id');
         try {
-            await dataService.changeTopicLockingState(postId, false);
+            await topicService.changeTopicLockingState(postId, false);
 
         } catch (error) {
             return;
@@ -162,7 +162,7 @@ export async function showTopicView(ctx) {
         const postId = currentTarget.getAttribute('data-id');
 
         try {
-            await dataService.archiveTopic(postId);
+            await topicService.archiveTopic(postId);
 
         } catch (error) {
             return;
@@ -181,7 +181,7 @@ export async function showTopicView(ctx) {
         const replyId = e.currentTarget.getAttribute('data-id');
 
         try {
-            await dataService.deleteReply(replyId);
+            await replyService.deleteReply(replyId);
 
         } catch (error) {
             return;

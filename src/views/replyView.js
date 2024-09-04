@@ -1,5 +1,6 @@
 import { html } from "@lit/lit-html.js";
-import { dataService } from "../service/dataService.js";
+import { topicService, replyService } from "../service/dataService.js";
+import { banService } from "../service/userService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 
 const template = (data, roleForVideo, replyHandler) => html`
@@ -27,7 +28,7 @@ const template = (data, roleForVideo, replyHandler) => html`
 
 export async function showReplyView(ctx) {
     const userId = ctx.userUtils.getUserData()?.objectId;
-    const isBanned = await dataService.isActiveBan(userId);
+    const isBanned = await banService.isActiveBan(userId);
 
     if(isBanned){
         ctx.redirect('/ban-message');
@@ -35,7 +36,7 @@ export async function showReplyView(ctx) {
     }
 
     const id = ctx.params.id;
-    const data = await dataService.getTopicDetails(id);
+    const data = await topicService.getTopicDetails(id);
     const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
 
     ctx.render(template(data, roleForVideo, submitHandler(onReply)));
@@ -60,7 +61,7 @@ export async function showReplyView(ctx) {
         }
 
         try {
-            await dataService.addNewReply(content, authorId, objectId, videoUrl);
+            await replyService.addNewReply(content, authorId, objectId, videoUrl);
 
         } catch (error) {
             locker.unlockForm();

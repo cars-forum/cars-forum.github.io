@@ -1,5 +1,5 @@
 import { html } from "@lit/lit-html.js";
-import { dataService } from '../service/dataService.js';
+import { banService } from '../service/userService.js';
 
 const template = (info) => html`
 <section id="create-topic">
@@ -11,6 +11,6 @@ const template = (info) => html`
 
 export async function showBanMessageView(ctx) {
     const userId = ctx.userUtils.getUserData()?.objectId;
-    const banInfo = await dataService.getBanInfo(userId);
+    const banInfo = await banService.getBanInfo(userId);
     ctx.render(template(banInfo));
 }
