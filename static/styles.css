@@ -551,6 +551,23 @@ form button:hover {
     display: "none";
 }
 
+/* Notifications */
+.error-notific {
+    text-align: center;
+    font-size: 18px;
+    padding: 20px;
+    background-color: rgb(255, 141, 141);
+    width: 95%;
+}
+
+.success-notific {
+    text-align: center;
+    font-size: 18px;
+    padding: 20px;
+    background-color: rgb(100, 255, 108);
+    width: 95%;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #topic .comment {

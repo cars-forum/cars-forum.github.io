@@ -1,6 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { signInService } from "../service/userService.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (registerHandler) => html`
 <section id="register">
@@ -21,6 +22,7 @@ const template = (registerHandler) => html`
 
 export function showRegisterView(ctx) {
     ctx.render(template(submitHandler(onRegister)));
+    debugger;
 
     async function onRegister({ username, email, password, repassword }, form) {
         const locker = new FormLocker('register-form');
