@@ -5,7 +5,7 @@ import { categoryService } from "../service/dataService.js";
 const template = (createHandler) => html`
 <section id="create-category">
     <h1>Create a New Category</h1>
-    <form @submit=${createHandler}>
+    <form id="create-form" @submit=${createHandler}>
         <label for="title">Category Title</label>
         <input type="text" id="title" name="title">
         <button type="submit" id="submit" class="create-button">Create Category</button>
@@ -17,7 +17,7 @@ export function showCreateCategoryView(ctx) {
     ctx.render(template(submitHandler(onCreate)));
 
     async function onCreate({ title }, form) {
-        const locker = new FormLocker(['title', 'submit']);
+        const locker = new FormLocker('create-form');
         locker.lockForm();
 
         if (!title) {

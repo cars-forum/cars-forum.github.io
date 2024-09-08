@@ -5,7 +5,7 @@ import { signInService } from "../service/userService.js";
 const template = (loginHandler) => html`
 <section id="login">
     <h1>Login</h1>
-    <form @submit=${loginHandler}>
+    <form id='login-form' @submit=${loginHandler}>
         <label for="username">Username</label>
         <input type="text" id="username" name="username">
         <label for="password">Password</label>
@@ -18,7 +18,7 @@ export function showLoginView(ctx) {
     ctx.render(template(submitHandler(onLogin)));
 
     async function onLogin({ username, password }, form) {
-        const locker = new FormLocker(['username', 'password', 'submit']);
+        const locker = new FormLocker('login-form');
         locker.lockForm();
 
         if (!username || !password) {

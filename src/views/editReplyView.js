@@ -5,7 +5,7 @@ import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 const template = (data, editHandler) => html`
 <section id="edit-reply">
     <h1>Edit Reply</h1>
-    <form @submit=${editHandler}>
+    <form id="edit-form" @submit=${editHandler}>
         <label for="title">Title</label>
         <input ?disabled=${true} type="text" id="title" name="title" .value=${data.post.title}>
 
@@ -25,7 +25,7 @@ export async function showEditReplyView(ctx) {
     ctx.render(template(data, submitHandler(onEdit)));
 
     async function onEdit({ content }, form) {
-        const locker = new FormLocker(['content', 'submit']);
+        const locker = new FormLocker('edit-form');
         locker.lockForm();
 
         if (!content) {

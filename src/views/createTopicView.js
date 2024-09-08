@@ -6,7 +6,7 @@ import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 const template = (categoryList, roleForVideo, createHandler) => html`
 <section id="create-topic">
     <h1>Create a New Topic</h1>
-    <form @submit=${createHandler}>
+    <form id="create-form" @submit=${createHandler}>
         <label for="category">Category</label>
         <select id="category" name="category">
             ${categoryList.map(categoryTemplate)}
@@ -49,7 +49,7 @@ export async function showCreateTopicView(ctx) {
 
 
     async function onCreate({ category, title, videoUrl, content }, form) {
-        const locker = new FormLocker(['category', 'title', 'content', 'submit']);
+        const locker = new FormLocker('create-form');
         locker.lockForm();
 
         if (!category) {
@@ -57,9 +57,9 @@ export async function showCreateTopicView(ctx) {
             return alert('Please choose a category!');
         }
 
-        if (title.length < 4 || title.length > 30) {
+        if (title.length < 4 || title.length > 80) {
             locker.unlockForm();
-            return alert('Title length must be between 4 and 30 characters long.');
+            return alert('Title length must be between 4 and 80 characters long.');
         }
 
         if (content.length < 10) {

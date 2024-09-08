@@ -31,7 +31,7 @@ const template = (data, userData, roles, brands, isBanned, updateHandler, banHan
     </div>
     ${!isBanned ? html`
     ${isOwner || roles.isAdmin || roles.isModerator ? html`
-            <form @submit=${updateHandler}>
+            <form id="update-form" @submit=${updateHandler}>
                 ${profileFormTemplates[userData.roleId](data, brands)}
                 <br />
                 <button id="submit" type="submit" class="update-button">Update</button>
@@ -79,14 +79,9 @@ export async function showProfileView(ctx) {
     const isBanned = await banService.isActiveBan(userId) && userData.objectId === userId;
 
     ctx.render(template(data, userData, roles, brands, isBanned, submitHandler(onUpdate), submitHandler(onBan)));
-    const locker = new FormLocker(['avatar-url',
-        'location',
-        'preferred-manufacturer',
-        'ban-until',
-        'role',
-        'submit']);
 
     async function onUpdate({ "avatar-url": avatar, location, "preferred-manufacturer": preferredManufacturer, role }) {
+        const locker = new FormLocker('update-form');
         locker.lockForm();
         const updateData = {};
 
@@ -121,10 +116,11 @@ export async function showProfileView(ctx) {
     }
 
     async function onBan({ expiresOn, reason }) {
-        locker.lockForm();
-
+        const banLocker = new FormLocker('ban-form');
+        banLocker.lockForm();
+        
         if (!expiresOn) {
-            locker.unlockForm();
+            banLocker.unlockForm();
             return alert('Please, pick a date!');
         }
 
@@ -133,7 +129,7 @@ export async function showProfileView(ctx) {
         const today = new Date();
 
         if (today >= expiresOn) {
-            locker.unlockForm();
+            banLocker.unlockForm();
             return alert("You can't choose dates in the past.");
         }
 
@@ -145,8 +141,9 @@ export async function showProfileView(ctx) {
         try {
             await banService.banUser(userId, expiresOn, reason);
             await replyService.addNewReply(message, modId, bansReportsTopicId);
+
         } catch (error) {
-            locker.unlockForm();
+            banLocker.unlockForm();
             return;
         }
 

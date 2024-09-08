@@ -10,26 +10,29 @@ export function submitHandler(handler) {
 }
 
 export class FormLocker {
-    constructor(inputIdsArr) {
-        this.inputIds = inputIdsArr;
+    constructor(formId) {
+        this.formId = formId;
+        this.inputIds = document.getElementById(formId).querySelectorAll('input,select,textarea,button');
     }
 
-    get inputIds() {
-        return this._inputIds;
+    get formId() {
+        return this._formId;
     }
 
-    set inputIds(val) {
-        if (Array.isArray(val)) {
-            this._inputIds = val;
-            return;
+    set formId(val) {
+        if (typeof val !== 'string') {
+            throw new TypeError('The FormLocker parameter must be a string.');
         }
 
-        throw new TypeError('FormLocker parameter must be an array.');
+        if(val.includes(' ')){
+            throw new TypeError('The FormLocker parameter must not contain whitespaces.');
+        }
+
+        this._formId = val;
     }
 
     lockForm() {
-        this.inputIds.forEach(id => {
-            const element = document.getElementById(id);
+        this.inputIds.forEach(element => {
             if (element) {
                 element.setAttribute('disabled', 'disabled');
             }
@@ -37,8 +40,7 @@ export class FormLocker {
     }
 
     unlockForm() {
-        this.inputIds.forEach(id => {
-            const element = document.getElementById(id);
+        this.inputIds.forEach(element => {
             if (element) {
                 element.removeAttribute('disabled');
             }

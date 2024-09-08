@@ -5,7 +5,7 @@ import { submitHandler, FormLocker } from "../utils/submitUtil.js";
 const template = (data, categoryList, editHandler) => html`
 <section id="edit-topic">
     <h1>Edit Topic</h1>
-    <form @submit=${editHandler}>
+    <form id="edit-form" @submit=${editHandler}>
         <label for="category">Category</label>
         <select id="category" name="category" .value=${data.category}>
             ${categoryList.map(categoryTemplate)}
@@ -35,7 +35,7 @@ export async function showEditTopicView(ctx) {
     ctx.render(template(data, categoryList, submitHandler(onEdit)));
 
     async function onEdit({ "category": categoryId, title, content }, form) {
-        const locker = new FormLocker(['category', 'title', 'content', 'submit']);
+        const locker = new FormLocker('edit-form');
         locker.lockForm();
 
         if (!categoryId) {

@@ -5,7 +5,7 @@ import { signInService } from "../service/userService.js";
 const template = (registerHandler) => html`
 <section id="register">
     <h1>Register</h1>
-    <form @submit=${registerHandler}>
+    <form id="register-form" @submit=${registerHandler}>
         <label for="username">Username</label>
         <input @change=${fillCheck} type="text" id="username" name="username">
         <label for="email">Email</label>
@@ -23,7 +23,7 @@ export function showRegisterView(ctx) {
     ctx.render(template(submitHandler(onRegister)));
 
     async function onRegister({ username, email, password, repassword }, form) {
-        const locker = new FormLocker(['username', 'email', 'password', 'repassword', 'submit']);
+        const locker = new FormLocker('register-form');
 
         locker.lockForm();
 

@@ -6,7 +6,7 @@ import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 const template = (data, roleForVideo, replyHandler) => html`
 <section id="reply-topic">
     <h1>Reply to</h1>
-    <form @submit=${replyHandler}>
+    <form id="reply-form" @submit=${replyHandler}>
         <input ?hidden=${true} type="text" id="objectId" name="objectId" .value=${data.objectId}>
 
         <label for="title">Title</label>
@@ -42,7 +42,7 @@ export async function showReplyView(ctx) {
     ctx.render(template(data, roleForVideo, submitHandler(onReply)));
 
     async function onReply({ objectId, videoUrl, content }, form) {
-        const locker = new FormLocker(['content', 'submit']);
+        const locker = new FormLocker('reply-form');
         locker.lockForm();
 
         if (!content) {
