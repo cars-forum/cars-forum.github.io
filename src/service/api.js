@@ -29,7 +29,7 @@ async function requester(method, url, data) {
         if (!response.ok) {
             const error = await response.json();
 
-            throw new Error(error.message);
+            throw new Error(error.error);
         }
 
         if (response.status === 204) {
@@ -40,7 +40,7 @@ async function requester(method, url, data) {
         }
 
     } catch (error) {
-        alert(error);
+        // alert(error);
         throw error;
     }
 }

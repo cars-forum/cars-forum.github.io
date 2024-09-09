@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { signInService } from "../service/userService.js";
-import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (registerHandler) => html`
 <section id="register">
@@ -22,7 +22,7 @@ const template = (registerHandler) => html`
 
 export function showRegisterView(ctx) {
     ctx.render(template(submitHandler(onRegister)));
-    debugger;
+    const sectionId = 'register';
 
     async function onRegister({ username, email, password, repassword }, form) {
         const locker = new FormLocker('register-form');
@@ -31,12 +31,12 @@ export function showRegisterView(ctx) {
 
         if (username.length < 4 || email.length < 6 || password.length < 5) {
             locker.unlockForm();
-            return alert('Please fulfill the requirements!');
+            return new ErrorNotific('Please fulfill the requirements!').showNotificIn(sectionId);
         }
 
         if (password !== repassword) {
             locker.unlockForm();
-            return alert("Passwords don't match.");
+            return new ErrorNotific("Passwords don't match.").showNotificIn(sectionId);
         }
 
         try {
@@ -44,7 +44,7 @@ export function showRegisterView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();

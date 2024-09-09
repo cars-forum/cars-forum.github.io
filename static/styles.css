@@ -558,6 +558,7 @@ form button:hover {
     padding: 20px;
     background-color: rgb(255, 141, 141);
     width: 95%;
+    margin-bottom: 15px;
 }
 
 .success-notific {
@@ -566,6 +567,7 @@ form button:hover {
     padding: 20px;
     background-color: rgb(100, 255, 108);
     width: 95%;
+    margin-bottom: 15px;
 }
 
 /* Responsive Design */
