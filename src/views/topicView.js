@@ -2,6 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { styleMap } from '@lit/directives/style-map.js';
 import { topicService, replyService, commonDataService } from "../service/dataService.js";
 import { roleStyles } from "../utils/stylesUtils.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (data, replies, userData, isAdminOrMod, editPermisions, deletePermisions, isArchived, handlers) => {
     const userCardTemplate = (data) => {
@@ -114,6 +115,7 @@ export async function showTopicView(ctx) {
     };
 
     ctx.render(template(data, replies, userData, isAdminOrMod, editPermisions, deletePermisions, isArchived, handlers));
+    const sectionId = 'topic';
 
     async function lockTopic(e) {
         const confirmation = confirm('Do you want to lock this topic?');
@@ -128,7 +130,7 @@ export async function showTopicView(ctx) {
             await topicService.changeTopicLockingState(postId, true);
 
         } catch (error) {
-            return;
+           return new ErrorNotific(error).showNotificIn(sectionId);
         }
         ctx.redirect('/topic/' + id);
     }
@@ -146,7 +148,7 @@ export async function showTopicView(ctx) {
             await topicService.changeTopicLockingState(postId, false);
 
         } catch (error) {
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
         ctx.redirect('/topic/' + id);
     }
@@ -165,7 +167,7 @@ export async function showTopicView(ctx) {
             await topicService.archiveTopic(postId);
 
         } catch (error) {
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         ctx.redirect('/');
@@ -184,7 +186,7 @@ export async function showTopicView(ctx) {
             await replyService.deleteReply(replyId);
 
         } catch (error) {
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         ctx.redirect('/topic/' + id);

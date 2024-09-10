@@ -552,22 +552,22 @@ form button:hover {
 }
 
 /* Notifications */
-.error-notific {
+.notific {
     text-align: center;
     font-size: 18px;
     padding: 20px;
-    background-color: rgb(255, 141, 141);
     width: 95%;
     margin-bottom: 15px;
 }
 
+.error-notific {
+    border: 0.4px solid rgb(153, 38, 38);
+    color: rgb(153, 38, 38);
+    background-color: rgb(255, 141, 141);
+}
+
 .success-notific {
-    text-align: center;
-    font-size: 18px;
-    padding: 20px;
     background-color: rgb(100, 255, 108);
-    width: 95%;
-    margin-bottom: 15px;
 }
 
 /* Responsive Design */

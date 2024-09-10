@@ -1,6 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { topicService, categoryService } from "../service/dataService.js";
 import { submitHandler, FormLocker } from "../utils/submitUtil.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (data, categoryList, editHandler) => html`
 <section id="edit-topic">
@@ -33,6 +34,7 @@ export async function showEditTopicView(ctx) {
     selectCurrentCategory(data, categoryList);
 
     ctx.render(template(data, categoryList, submitHandler(onEdit)));
+    const sectionId = 'edit-topic';
 
     async function onEdit({ "category": categoryId, title, content }, form) {
         const locker = new FormLocker('edit-form');
@@ -40,17 +42,17 @@ export async function showEditTopicView(ctx) {
 
         if (!categoryId) {
             locker.unlockForm();
-            return alert('Please choose a category!');
+            return new ErrorNotific('Please choose a category!').showNotificIn(sectionId);
         }
 
         if (title.length < 4 || title.length > 30) {
             locker.unlockForm();
-            return alert('Title length must be between 4 and 30 characters long.');
+            return new ErrorNotific('Title length must be between 4 and 30 characters long.').showNotificIn(sectionId);
         }
 
         if (content.length < 10) {
             locker.unlockForm();
-            return alert('Content must be at least 10 characters long.');
+            return new ErrorNotific('Content must be at least 10 characters long.').showNotificIn(sectionId);
         }
 
         const editor = ctx.userUtils.getUserData()?.username;
@@ -63,7 +65,7 @@ export async function showEditTopicView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();

@@ -1,6 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { categoryService } from "../service/dataService.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (createHandler) => html`
 <section id="create-category">
@@ -15,6 +16,7 @@ const template = (createHandler) => html`
 
 export function showCreateCategoryView(ctx) {
     ctx.render(template(submitHandler(onCreate)));
+    const sectionId = 'create-category';
 
     async function onCreate({ title }, form) {
         const locker = new FormLocker('create-form');
@@ -22,7 +24,7 @@ export function showCreateCategoryView(ctx) {
 
         if (!title) {
             locker.unlockForm();
-            return alert('Choose a correct category name!');
+            return new ErrorNotific('Choose a correct category name!').showNotificIn(sectionId);
         }
 
         try {
@@ -30,7 +32,7 @@ export function showCreateCategoryView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();

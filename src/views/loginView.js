@@ -1,6 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { signInService } from "../service/userService.js";
+import { ErrorNotific, SuccessNotific } from '../utils/notificationUtil.js';
 
 const template = (loginHandler) => html`
 <section id="login">
@@ -16,6 +17,7 @@ const template = (loginHandler) => html`
 `
 export function showLoginView(ctx) {
     ctx.render(template(submitHandler(onLogin)));
+    const sectionId = 'login';
 
     async function onLogin({ username, password }, form) {
         const locker = new FormLocker('login-form');
@@ -23,7 +25,7 @@ export function showLoginView(ctx) {
 
         if (!username || !password) {
             locker.unlockForm();
-            return alert('All fields are required.');
+            return new ErrorNotific('All fields are required.').showNotificIn(sectionId);
         }
 
         try {
@@ -31,7 +33,7 @@ export function showLoginView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();

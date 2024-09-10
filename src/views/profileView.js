@@ -5,6 +5,7 @@ import { roleStyles } from '../utils/stylesUtils.js';
 import { profileFormTemplates } from '../templates/profileTemplates.js';
 import { replyService, commonDataService } from '../service/dataService.js';
 import { FormLocker, submitHandler } from '../utils/submitUtil.js';
+import { ErrorNotific } from '../utils/notificationUtil.js';
 
 const template = (data, userData, roles, brands, isBanned, updateHandler, banHandler) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
@@ -79,6 +80,7 @@ export async function showProfileView(ctx) {
     const isBanned = await banService.isActiveBan(userId) && userData.objectId === userId;
 
     ctx.render(template(data, userData, roles, brands, isBanned, submitHandler(onUpdate), submitHandler(onBan)));
+    const sectionId = 'user-details'
 
     async function onUpdate({ "avatar-url": avatar, location, "preferred-manufacturer": preferredManufacturer, role }) {
         const locker = new FormLocker('update-form');
@@ -109,7 +111,7 @@ export async function showProfileView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
         locker.unlockForm();
         ctx.redirect('/profile/' + userId);
@@ -121,7 +123,7 @@ export async function showProfileView(ctx) {
         
         if (!expiresOn) {
             banLocker.unlockForm();
-            return alert('Please, pick a date!');
+            return new ErrorNotific('Please, pick a date!').showNotificIn(sectionId);
         }
 
         expiresOn = new Date(expiresOn);
@@ -130,7 +132,7 @@ export async function showProfileView(ctx) {
 
         if (today >= expiresOn) {
             banLocker.unlockForm();
-            return alert("You can't choose dates in the past.");
+            return new ErrorNotific("You can't choose dates in the past.").showNotificIn(sectionId);
         }
 
         const bansReportsTopicId = 'ra3dDlNpkj';
@@ -144,7 +146,7 @@ export async function showProfileView(ctx) {
 
         } catch (error) {
             banLocker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         ctx.redirect('/topic/' + bansReportsTopicId);

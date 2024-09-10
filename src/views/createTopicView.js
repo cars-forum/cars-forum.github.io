@@ -2,6 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { topicService, categoryService } from "../service/dataService.js";
 import { banService } from "../service/userService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (categoryList, roleForVideo, createHandler) => html`
 <section id="create-topic">
@@ -46,7 +47,7 @@ export async function showCreateTopicView(ctx) {
     const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
 
     ctx.render(template(categoryList, roleForVideo, submitHandler(onCreate)));
-
+    const sectionId = 'create-topic';
 
     async function onCreate({ category, title, videoUrl, content }, form) {
         const locker = new FormLocker('create-form');
@@ -54,23 +55,24 @@ export async function showCreateTopicView(ctx) {
 
         if (!category) {
             locker.unlockForm();
-            return alert('Please choose a category!');
+            return new ErrorNotific('Please choose a category!').showNotificIn(sectionId);
         }
 
         if (title.length < 4 || title.length > 80) {
             locker.unlockForm();
-            return alert('Title length must be between 4 and 80 characters long.');
+            return new ErrorNotific('Title length must be between 4 and 80 characters long.').showNotificIn(sectionId);
         }
 
         if (content.length < 10) {
             locker.unlockForm();
-            return alert('Content must be at least 10 characters long.');
+            return new ErrorNotific('Content must be at least 10 characters long.').showNotificIn(sectionId);
         }
 
         if (videoUrl) {
             const prefix = 'https://www.youtube.com/';
             if (!videoUrl.startsWith(prefix)) {
-                return alert('Incorrect video URL!');
+                locker.unlockForm();
+                return new ErrorNotific('Incorrect video URL!').showNotificIn(sectionId);
             }
             videoUrl = videoUrl.replace('watch?v=', 'embed/');
         }
@@ -83,7 +85,7 @@ export async function showCreateTopicView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();

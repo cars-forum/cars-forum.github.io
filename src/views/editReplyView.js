@@ -1,6 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { replyService } from "../service/dataService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (data, editHandler) => html`
 <section id="edit-reply">
@@ -23,6 +24,7 @@ export async function showEditReplyView(ctx) {
     const postId = data.post.objectId;
 
     ctx.render(template(data, submitHandler(onEdit)));
+    const sectionId = 'edit-reply';
 
     async function onEdit({ content }, form) {
         const locker = new FormLocker('edit-form');
@@ -30,7 +32,7 @@ export async function showEditReplyView(ctx) {
 
         if (!content) {
             locker.unlockForm();
-            return alert('Content must be at least 10 characters long.');
+            return new ErrorNotific('Content must be at least 10 characters long.').showNotificIn(sectionId);
         }
 
         const editor = ctx.userUtils.getUserData()?.username;
@@ -43,7 +45,7 @@ export async function showEditReplyView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();

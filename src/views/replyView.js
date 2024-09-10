@@ -2,6 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { topicService, replyService } from "../service/dataService.js";
 import { banService } from "../service/userService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
+import { ErrorNotific } from "../utils/notificationUtil.js";
 
 const template = (data, roleForVideo, replyHandler) => html`
 <section id="reply-topic">
@@ -40,6 +41,7 @@ export async function showReplyView(ctx) {
     const roleForVideo = ctx.userUtils.isAdmin() || ctx.userUtils.isModerator() || ctx.userUtils.isTopUser();
 
     ctx.render(template(data, roleForVideo, submitHandler(onReply)));
+    const sectionId = 'reply-topic';
 
     async function onReply({ objectId, videoUrl, content }, form) {
         const locker = new FormLocker('reply-form');
@@ -47,7 +49,7 @@ export async function showReplyView(ctx) {
 
         if (!content) {
             locker.unlockForm();
-            return alert("Content can't be an empty field.");
+            return new ErrorNotific("Content can't be an empty field.").showNotificIn(sectionId);
         }
 
         const authorId = ctx.userUtils.getUserData()?.objectId;
@@ -55,7 +57,7 @@ export async function showReplyView(ctx) {
         if (videoUrl) {
             const prefix = 'https://www.youtube.com/';
             if (!videoUrl.startsWith(prefix)) {
-                return alert('Incorrect video URL!');
+                return new ErrorNotific('Incorrect video URL!').showNotificIn(sectionId);
             }
             videoUrl = videoUrl.replace('watch?v=', 'embed/');
         }
@@ -65,7 +67,7 @@ export async function showReplyView(ctx) {
 
         } catch (error) {
             locker.unlockForm();
-            return;
+            return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
         form.reset();
