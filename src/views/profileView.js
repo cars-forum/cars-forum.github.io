@@ -5,7 +5,7 @@ import { roleStyles } from '../utils/stylesUtils.js';
 import { profileFormTemplates } from '../templates/profileTemplates.js';
 import { replyService, commonDataService } from '../service/dataService.js';
 import { FormLocker, submitHandler } from '../utils/submitUtil.js';
-import { ErrorNotific } from '../utils/notificationUtil.js';
+import { ErrorNotific, SuccessNotific } from '../utils/notificationUtil.js';
 
 const template = (data, userData, roles, brands, isBanned, updateHandler, banHandler) => {
     const roleStyle = roleStyles[data["role"]["objectId"]];
@@ -115,6 +115,7 @@ export async function showProfileView(ctx) {
         }
         locker.unlockForm();
         ctx.redirect('/profile/' + userId);
+        return new SuccessNotific('Profile settings updated successfully.').showNotificIn(sectionId);
     }
 
     async function onBan({ expiresOn, reason }) {
@@ -149,7 +150,8 @@ export async function showProfileView(ctx) {
             return new ErrorNotific(error).showNotificIn(sectionId);
         }
 
-        ctx.redirect('/topic/' + bansReportsTopicId);
+        new SuccessNotific(`${username} is banned from the forum until ${expiresOn.toLocaleString('uk-Uk')}.`).showNotificIn(sectionId);
+        setTimeout(()=>ctx.redirect('/topic/' + bansReportsTopicId), 7000);
     }
 }
 

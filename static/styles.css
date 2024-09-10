@@ -567,6 +567,8 @@ form button:hover {
 }
 
 .success-notific {
+    border: 0.4px solid rgb(14, 74, 17);
+    color: rgb(14, 74, 17);
     background-color: rgb(100, 255, 108);
 }
 
