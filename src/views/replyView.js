@@ -2,7 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { topicService, replyService } from "../service/dataService.js";
 import { banService } from "../service/userService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
-import { ErrorNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (data, roleForVideo, replyHandler) => html`
 <section id="reply-topic">
@@ -72,5 +72,6 @@ export async function showReplyView(ctx) {
 
         form.reset();
         ctx.redirect('/topic/' + objectId);
+        setTimeout(()=> new SuccessNotific('You reply successfully.').showNotificIn('topic'), 3000);
     }
 }
