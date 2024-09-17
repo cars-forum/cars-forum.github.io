@@ -1,6 +1,6 @@
 import { user } from "../utils/userUtils.js";
 import { api } from "./api.js";
-import { ROLES } from "./roles.js";
+import { ROLES } from "./protected.js";
 
 const endpoints = {
     // Sign In endpoints

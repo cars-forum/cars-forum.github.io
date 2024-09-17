@@ -1,4 +1,2 @@
 node_modules
-HTMLTemplates
-apiKeys.js
-roles.js
+protected.js

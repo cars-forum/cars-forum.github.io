@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import page from "@page/page.mjs";
 
-import { ROLES } from "../service/roles.js";
+import { ROLES } from "../service/protected.js";
 import { userService } from "../service/userService.js";
 
 const userKey = ROLES.user;

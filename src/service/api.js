@@ -1,5 +1,5 @@
 import { user } from "../utils/userUtils.js";
-import { appId, apiKey } from "./apiKeys.js";
+import { xParseApplicationId, JavaScriptKey } from "./protected.js";
 
 const hostname = 'https://parseapi.back4app.com';
 
@@ -7,8 +7,8 @@ async function requester(method, url, data) {
     const options = {
         method,
         headers: {
-            'X-Parse-Application-Id': appId,
-            'X-Parse-JavaScript-Key': apiKey
+            'X-Parse-Application-Id': xParseApplicationId,
+            'X-Parse-JavaScript-Key': JavaScriptKey
         },
     }
 

@@ -1,4 +1,4 @@
-import { ROLES } from "../service/roles.js";
+import { ROLES } from "../service/protected.js";
 
 const userKey = ROLES.user;
 const topUserKey = ROLES.topUser;
