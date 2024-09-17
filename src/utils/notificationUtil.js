@@ -51,10 +51,6 @@ class SuccessNotific extends Notific {
     }
 }
 
-// function notificAfterSignIn(message) {
-    
-// }
-
 export {
     ErrorNotific,
     SuccessNotific

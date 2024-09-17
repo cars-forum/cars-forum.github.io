@@ -24,7 +24,7 @@ const categoryTemplate = (item) => html`
 `
 
 const topicTemplate = (item) => html`
-            <li><a href="topic/${item.objectId}"><strong>${item.title}</strong> | By: ${item.author.username} | Created on: ${new Date(item.createdAt).toLocaleDateString('uk-Uk')}</a></li>
+            <li><a href="/topic/${item.objectId}"><strong>${item.title}</strong> | By: ${item.author.username} | Created on: ${new Date(item.createdAt).toLocaleDateString('uk-Uk')}</a></li>
 `
 
 export async function showHomeView(ctx) {

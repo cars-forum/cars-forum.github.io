@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { categoryService } from "../service/dataService.js";
-import { ErrorNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (createHandler) => html`
 <section id="create-category">
@@ -37,5 +37,6 @@ export function showCreateCategoryView(ctx) {
 
         form.reset();
         ctx.redirect('/');
+        setTimeout(()=> new SuccessNotific('You have successfully created a new category.').showNotificIn('home'), 3000);
     }
 }

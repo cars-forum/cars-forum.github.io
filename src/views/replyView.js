@@ -72,6 +72,6 @@ export async function showReplyView(ctx) {
 
         form.reset();
         ctx.redirect('/topic/' + objectId);
-        setTimeout(()=> new SuccessNotific('You reply successfully.').showNotificIn('topic'), 3000);
+        setTimeout(()=> new SuccessNotific('You have replied successfully.').showNotificIn('topic'), 3000);
     }
 }

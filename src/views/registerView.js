@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
 import { signInService } from "../service/userService.js";
-import { ErrorNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (registerHandler) => html`
 <section id="register">
@@ -50,6 +50,7 @@ export function showRegisterView(ctx) {
         form.reset();
         ctx.updateNav();
         ctx.redirect('/');
+        setTimeout(()=> new SuccessNotific('You have successfully registered.').showNotificIn('home'), 3000);
     }
 
 }

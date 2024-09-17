@@ -39,5 +39,6 @@ export function showLoginView(ctx) {
         form.reset();
         ctx.updateNav();
         ctx.redirect('/');
+        setTimeout(()=> new SuccessNotific('You have successfully logged in.').showNotificIn('home'), 3000);
     }
 }

@@ -18,7 +18,13 @@ const endpoints = {
 }
 
 async function register(username, email, password) {
-    const result = await api.post(endpoints.register, { username, email, password });
+    const result = await api.post(endpoints.register, {
+        username,
+        email,
+        password,
+        role: { __type: 'Pointer', className: '_Role', objectId: ROLES.user },
+        location: ''
+    });
 
     const userData = {
         username,

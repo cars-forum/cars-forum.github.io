@@ -2,7 +2,7 @@ import { html } from "@lit/lit-html.js";
 import { topicService, categoryService } from "../service/dataService.js";
 import { banService } from "../service/userService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
-import { ErrorNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (categoryList, roleForVideo, createHandler) => html`
 <section id="create-topic">
@@ -78,10 +78,10 @@ export async function showCreateTopicView(ctx) {
         }
 
         const authorId = ctx.userUtils.getUserData()?.objectId;
+        let result = null;
 
         try {
-            const result = await topicService.createNewTopic(title, content, authorId, category, videoUrl);
-            ctx.redirect('/topic/' + result.objectId);
+            result = await topicService.createNewTopic(title, content, authorId, category, videoUrl);
 
         } catch (error) {
             locker.unlockForm();
@@ -89,5 +89,7 @@ export async function showCreateTopicView(ctx) {
         }
 
         form.reset();
+        ctx.redirect('/topic/' + result.objectId);
+        setTimeout(()=> new SuccessNotific('You have successfully created a new topic.').showNotificIn('topic'), 3000);
     }
 }

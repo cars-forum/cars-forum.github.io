@@ -2,6 +2,7 @@ import { html, render } from '@lit/lit-html.js';
 import { user } from '../utils/userUtils.js';
 import { signInService } from '../service/userService.js';
 import page from '@page/page.mjs';
+import { SuccessNotific } from '../utils/notificationUtil.js';
 
 export function addNavControl() {
     return function (ctx, next) {
@@ -41,4 +42,5 @@ async function onLogout() {
     
     updateNav();
     page.redirect('/');
+    setTimeout(()=> new SuccessNotific('You have successfully logged out.').showNotificIn('home'), 3000);
 }
