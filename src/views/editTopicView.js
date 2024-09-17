@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { topicService, categoryService } from "../service/dataService.js";
 import { submitHandler, FormLocker } from "../utils/submitUtil.js";
-import { ErrorNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (data, categoryList, editHandler) => html`
 <section id="edit-topic">
@@ -70,6 +70,7 @@ export async function showEditTopicView(ctx) {
 
         form.reset();
         ctx.redirect('/topic/' + id);
+        setTimeout(() => new SuccessNotific('You have successfully edited this topic.').showNotificIn('topic'), 3000);
     }
 
     function selectCurrentCategory(data, categoryList) {

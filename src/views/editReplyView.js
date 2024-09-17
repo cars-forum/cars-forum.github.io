@@ -1,7 +1,7 @@
 import { html } from "@lit/lit-html.js";
 import { replyService } from "../service/dataService.js";
 import { FormLocker, submitHandler } from "../utils/submitUtil.js";
-import { ErrorNotific } from "../utils/notificationUtil.js";
+import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (data, editHandler) => html`
 <section id="edit-reply">
@@ -50,5 +50,6 @@ export async function showEditReplyView(ctx) {
 
         form.reset();
         ctx.redirect('/topic/' + postId);
+        setTimeout(() => new SuccessNotific('You have successfully edited this reply.').showNotificIn('topic'), 3000);
     }
 }
