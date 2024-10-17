@@ -17,7 +17,7 @@ const template = (loginHandler) => html`
                             <input type="password" name="password" id="password">
                         </p>
 
-                        <p class="italic">You don't have an account? <a class="cf-link" href="/login">Register here.</a></p>
+                        <p class="italic">You don't have an account? <a class="cf-link" href="/register">Register here.</a></p>
 
                         <button class="button">Login</button>
                     </form>

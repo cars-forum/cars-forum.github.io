@@ -4,25 +4,39 @@ import { signInService } from "../service/userService.js";
 import { ErrorNotific, SuccessNotific } from "../utils/notificationUtil.js";
 
 const template = (registerHandler) => html`
-<section id="register">
-    <h1>Register</h1>
-    <form id="register-form" @submit=${registerHandler}>
-        <label for="username">Username</label>
-        <input @change=${fillCheck} type="text" id="username" name="username">
-        <label for="email">Email</label>
-        <input @change=${fillCheck} type="text" id="email" name="email">
-        <label for="password">Password</label>
-        <input @change=${fillCheck} type="password" id="password" name="password">
-        <label for="repassword">Repeat Password</label>
-        <input @change=${passwordMatchingCheck} type="password" id="repassword" name="repassword">
-        <button id="submit" type="submit">Register</button>
-    </form>
-</section>
+                    <section id="notific"></section>
+                    <form @submit=${registerHandler} id="register-form">
+                        <h2>Register</h2>
+                        <p class="field">
+                            <label for="username">Username:</label>
+                            <input type="text" name="username" id="username">
+                        </p>
+
+                        <p class="field">
+                            <label for="email">Email:</label>
+                            <input type="text" name="email" id="email">
+                        </p>
+
+                        <p class="field">
+                            <label for="password">Password:</label>
+                            <input type="password" name="password" id="password">
+                        </p>
+
+                        <p class="field">
+                            <label for="repassword">Repeat Password:</label>
+                            <input type="password" name="repassword" id="repassword">
+                        </p>
+
+                        <p class="italic">You have an account? <a class="cf-link" href="/login">Log in here.</a></p>
+
+                        <button class="button">Register</button>
+                    </form>
 `
 
 export function showRegisterView(ctx) {
+    ctx.render(ctx.heads.formHeadTemplate(), document.querySelector("head"));
     ctx.render(template(submitHandler(onRegister)));
-    const sectionId = 'register';
+    const sectionId = 'notific';
 
     async function onRegister({ username, email, password, repassword }, form) {
         const locker = new FormLocker('register-form');
@@ -50,7 +64,7 @@ export function showRegisterView(ctx) {
         form.reset();
         ctx.updateNav();
         ctx.redirect('/');
-        setTimeout(()=> new SuccessNotific('You have successfully registered.').showNotificIn('home'), 3000);
+        // setTimeout(()=> new SuccessNotific('You have successfully registered.').showNotificIn('home'), 3000);
     }
 
 }
