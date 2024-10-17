@@ -2,12 +2,13 @@ import { html, render } from '@lit/lit-html.js';
 import { user } from '../utils/userUtils.js';
 import { signInService } from '../service/userService.js';
 import page from '@page/page.mjs';
+import { heads } from '../templates/headTemplates.js';
 import { SuccessNotific } from '../utils/notificationUtil.js';
 
 export function addNavControl() {
     return function (ctx, next) {
         ctx.updateNav = updateNav;
-
+        ctx.heads = heads;
         next();
     }
 }
@@ -22,7 +23,7 @@ export function updateNav() {
             <li><a @click=${onLogout} id="logoutButton" href="javascript:void(0)" class="button"><i class="fa-solid fa-right-from-bracket"></i></a></li>
         `: html`
             <li><a id="loginButton" href="/login" class="button"><i class="fa-solid fa-right-to-bracket"></i></a></li>
-            <li><a id="registerButton" href="/register" class="button"><i class="fa-solid fa-registered"></i></a></li>
+            <li><a id="registerButton" href="/register" class="button"><i class="fa-solid fa-user-plus"></i></a></li>
         `}
     </ul>
         `

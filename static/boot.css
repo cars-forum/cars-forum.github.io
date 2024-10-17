@@ -20,7 +20,7 @@ img {
 }
 
 body {
-    background-image: url('./images/main-image.png');
+    background-image: url('./img/main-image.png');
     background-position: center;
     background-size: cover;
     font-family: "Arimo", sans-serif;

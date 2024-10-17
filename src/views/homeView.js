@@ -51,5 +51,6 @@ export async function showHomeView(ctx) {
 
     const userData = ctx.userUtils.getUserData();
     const isAdmin = ctx.userUtils.isAdmin();
+    ctx.render(ctx.heads.indexHeadTemplate(), document.querySelector("head"))
     ctx.render(template(categoriesWithTopics, userData, isAdmin));
 }
