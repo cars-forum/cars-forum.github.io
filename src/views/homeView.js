@@ -2,29 +2,43 @@ import { html } from "@lit/lit-html.js";
 import { topicService, categoryService } from "../service/dataService.js";
 
 const template = (categories, userData, isAdmin) => html`
-<section id="home">
-    <h1>Forum Categories</h1>
-    ${isAdmin ? html`
-    <a class="button" href="/create-category">Create New Category</a>
-    `: null}
-    ${categories.map(categoryTemplate)}
-    ${userData ? html`
-    <a class="button" href="/create-topic">Create New Topic</a>
-    `: null}
-</section>
+            <div class="content-buttons">
+                ${userData ? html`<a href="/create-topic" class="button">Create New Topic</a>`:null}
+                ${isAdmin ? html`<a href="/create-category" class="button">Create New Category</a>`:null}
+            </div>
+            ${categories.map(categoryTemplate)}
 `
 
 const categoryTemplate = (item) => html`
-    <div class="category">
-        <h2>${item.title}</h2>
-        <ul>
-            ${item.topics.map(topicTemplate)}
-        </ul>
-    </div>
+<section class="category-group">
+                <header class="category-header">
+                    <h3 class="category-title">${item.title}</h3>
+                </header>
+                <article>
+                    <ul>
+                        ${item.topics.map(topicTemplate)}
+                    </ul>
+                </article>
+            </section>
 `
 
 const topicTemplate = (item) => html`
-            <li><a href="/topic/${item.objectId}"><strong>${item.title}</strong> | By: ${item.author.username} | Created on: ${new Date(item.createdAt).toLocaleDateString('uk-Uk')}</a></li>
+                        <li>
+                            <a href="/topic/${item.objectId}" class="topic-link">
+                                <div class="topic-icon">
+                                    ${item.isLocked ? 
+                                        html`<i class="fa-solid fa-lock"></i>` :
+                                        html`<i class="fa-regular fa-newspaper"></i>`}
+                                </div>
+                                <div class="topic-title">
+                                    <h4>${item.title}</h4>
+                                </div>
+                                <div class="topic-author">
+                                    <p>${item.author.username}</p>
+                                </div>
+                                <div class="topic-date"><time datetime="${item.createdAt}">${new Date(item.createdAt).toLocaleDateString('uk-Uk')}</time></div>
+                            </a>
+                        </li>
 `
 
 export async function showHomeView(ctx) {

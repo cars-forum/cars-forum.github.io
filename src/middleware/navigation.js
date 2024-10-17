@@ -15,14 +15,14 @@ export function addNavControl() {
 export function updateNav() {
     const template = (userData) => html`
     <ul>
-        <li><a href="/">Home</a></li>
+    <li><a id="homeButton" href="/" class="button"><i class="fa-solid fa-house"></i></a></li>
     
         ${userData ? html`
-            <li><a href="/profile/${userData.objectId}">Profile: ${userData.username}</a></li>
-            <li><a @click=${onLogout} href="javascript:void(0)">Logout</a></li>
+            <li><a id="profileButton" href="/profile/${userData.objectId}" class="button"><i class="fa-solid fa-user"></i></a></li>
+            <li><a @click=${onLogout} id="logoutButton" href="javascript:void(0)" class="button"><i class="fa-solid fa-right-from-bracket"></i></a></li>
         `: html`
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
+            <li><a id="loginButton" href="/login" class="button"><i class="fa-solid fa-right-to-bracket"></i></a></li>
+            <li><a id="registerButton" href="/register" class="button"><i class="fa-solid fa-registered"></i></a></li>
         `}
     </ul>
         `
@@ -39,8 +39,8 @@ async function onLogout() {
     } catch (error) {
         return;
     }
-    
+
     updateNav();
     page.redirect('/');
-    setTimeout(()=> new SuccessNotific('You have successfully logged out.').showNotificIn('home'), 3000);
+    setTimeout(() => new SuccessNotific('You have successfully logged out.').showNotificIn('home'), 3000);
 }

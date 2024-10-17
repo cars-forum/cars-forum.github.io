@@ -17,7 +17,7 @@ import { showCreateCategoryView } from './views/createCategoryView.js';
 import { showProfileView } from './views/profileView.js';
 import { showBanMessageView } from './views/banMessageView.js';
 
-const root = document.querySelector('main');
+const root = document.querySelector('main.site');
 
 if (!root) {
     throw new ReferenceError('Document has no valid root!');

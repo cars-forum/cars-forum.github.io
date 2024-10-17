@@ -1,0 +1,67 @@
+.brand-img {
+    width: 80px;
+    height: 80px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    border-radius: 8px;
+    background-color: #EEE;
+    padding: 20px;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.user-info > i {
+    font-size: 160px;
+}
+
+.user-label {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.role-label {
+    border-radius: 100px 8px 100px 8px;
+    background-color: darkred;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+form,
+.user-info {
+    max-width: 800px;
+    width: 100%;
+}
+
+nav.profile-view {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.slider-button {
+    flex: 0 0 calc(100% / 3);
+}
+
+@media screen and (max-width: 510px) {
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .field > input,
+    .field > select {
+        width: 90%;
+    }
+}

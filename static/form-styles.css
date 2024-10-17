@@ -1,0 +1,94 @@
+.container {
+    min-height: 100vh;
+    position: relative;
+}
+
+main.site {
+    /* min-height: 66.6vh; */
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    background-color: #EEE;
+    padding: 40px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    border-radius: 8px;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+form .field {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type=text],
+input[type=password],
+input[type=datetime-local],
+select,
+textarea {
+    padding: 8px;
+    border: none;
+    min-width: 215px;
+    border-radius: 4px;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+select:focus {
+    outline: none;
+    border-bottom: 3px solid #ff9900ed;
+}
+
+input:disabled {
+    background-color: #EEE;
+    border: 1px solid gray;
+}
+
+textarea:focus {
+    outline-color: #ff9900ed;
+}
+
+footer.site {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+#title {
+    flex-grow: 1;
+    max-width: 620px;
+}
+
+#category {
+    flex-grow: 1;
+    max-width: 630px;
+}
+
+.w-large {
+    min-width: 320px !important;
+}
+
+@media screen and (max-width: 1200px) {
+    form {
+        width: 90%;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+    }
+}

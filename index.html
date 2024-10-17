@@ -5,36 +5,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cars Forum</title>
-    <link rel="stylesheet" href="./static/styles.css">
-    <script type="importmap">
-        {
-          "imports": {
-            "@page/": "./lib/page/",
-            "@lit/": "./lib/lit/"
-          }
-        }
-      </script>
-    <script type="module" src="./src/app.js"></script>
+    <link rel="stylesheet" href="./static/boot.css">
+    <link rel="stylesheet" href="./static/index-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Monoton&family=Wittgenstein:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script type="importmap">
+            {
+              "imports": {
+                "@page/": "./lib/page/",
+                "@lit/": "./lib/lit/"
+              }
+            }
+          </script>
+        <script type="module" src="./src/app.js"></script>
+        <script type="module" src="./src/scripts/nav-menu-script.js"></script>
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <header>
-        <nav>
-            
-        </nav>
-    </header>
+    <div class="container">
+        <header class="site">
+            <div class="title-container">
+                <a href="/"><h1>CARS FORUM</h1></a>
+            </div>
+            <nav>
 
-    <!-- Main Content -->
-    <main class="container">
-        <img class="presentation" src="/static/img/main-image.png" alt="main">
+            </nav>
+            <div class="hover-button-info">Home</div>
+        </header>
+        <main class="site">
 
-    </main>
+        </main>
+        <footer class="site">
+            <p>© 2024 YordanovDY</p>
+        </footer>
+    </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 YordanovDY</p>
-    </footer>
 </body>
 
 </html>
